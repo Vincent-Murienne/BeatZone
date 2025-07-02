@@ -1,6 +1,7 @@
 import Fastify from 'fastify'
 import cors from '@fastify/cors'
 import helmet from '@fastify/helmet'
+import { supabase } from './db'
 
 const app = Fastify()
 app.register(cors, {
@@ -10,7 +11,11 @@ app.register(helmet)
 const PORT = Number(process.env.PORT)
 
 app.get('/', async () => {
-    return { hello: 'world' }
+    let { data: users, error } = await supabase
+    .from('users')
+    .select('*')
+    
+    return { users }
 })
 
 app.listen({ 
