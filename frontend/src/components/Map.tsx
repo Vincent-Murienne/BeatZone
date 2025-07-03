@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import Map, { Marker, Popup } from "react-map-gl";
+import Map, { Marker } from "react-map-gl";
 import type { ViewState } from "react-map-gl";
 import type { Event } from "../types/event";
+import EventModal from "./EventModal";
 import "mapbox-gl/dist/mapbox-gl.css";
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
@@ -205,169 +206,54 @@ const MapBox = () => {
     setFilteredEvents(events); // Réafficher tous les événements
   };
 
-  return (
-    <div style={{ height: "100vh", width: "100vw", position: "relative" }}>
-      <div
-        style={{
-          position: "absolute",
-          top: 20,
-          left: 20,
-          zIndex: 999,
-          width: 350,
-        }}
-      >
-        <div style={{ position: "relative" }}>
-          <div style={{ position: "relative" }}>
-            <input
-              type="text"
-              placeholder="Rechercher une adresse, ville ou code postal..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              style={{
-                padding: "12px 40px 12px 12px",
-                borderRadius: "8px",
-                border: "1px solid #ccc",
-                width: "100%",
-                backgroundColor: "white",
-                color: "#000",
-                fontSize: "14px",
-                outline: "none",
-                boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-              }}
-            />
+    return (
+    <div className="h-screen w-screen relative">
+      {/* Barre de recherche */}
+      <div className="absolute top-5 left-5 z-50 w-80">
+        <div className="relative">
+          <input
+            type="text"
+            placeholder="Rechercher une adresse, ville ou code postal..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full px-3 py-2 rounded-lg border border-gray-300 shadow-sm focus:outline-none focus:ring focus:ring-blue-200 text-sm"
+          />
 
-            {/* Bouton de suppression */}
-            {searchTerm && (
-              <button
-                onClick={handleClearSearch}
-                style={{
-                  position: "absolute",
-                  right: "8px",
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                  fontSize: "18px",
-                  color: "#666",
-                  padding: "4px",
-                }}
-              >
-                ×
-              </button>
-            )}
-
-            {/* Indicateur de chargement */}
-            {isSearching && (
-              <div
-                style={{
-                  position: "absolute",
-                  right: "30px",
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  fontSize: "12px",
-                  color: "#666",
-                }}
-              >
-                🔍
-              </div>
-            )}
-          </div>
-
-          {/* Suggestions améliorées */}
-          {suggestions.length > 0 && (
-            <ul
-              style={{
-                position: "absolute",
-                top: "100%",
-                left: 0,
-                width: "100%",
-                background: "white",
-                borderRadius: "0 0 8px 8px",
-                boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-                maxHeight: "300px",
-                overflowY: "auto",
-                margin: 0,
-                padding: 0,
-                zIndex: 1000,
-                border: "1px solid #e0e0e0",
-                borderTop: "none",
-                listStyle: "none",
-              }}
+          {searchTerm && (
+            <button
+              onClick={handleClearSearch}
+              className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
             >
-              {suggestions.map((suggestion) => (
+              ×
+            </button>
+          )}
+
+          {isSearching && (
+            <div className="absolute right-8 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">
+              🔍
+            </div>
+          )}
+
+          {suggestions.length > 0 && (
+            <ul className="absolute top-full left-0 w-full bg-white border border-t-0 border-gray-300 rounded-b-lg shadow-md z-50 max-h-80 overflow-y-auto">
+              {suggestions.map((s) => (
                 <li
-                  key={suggestion.id}
-                  onClick={() => handleSelectSuggestion(suggestion)}
-                  style={{
-                    padding: "12px",
-                    cursor: "pointer",
-                    borderBottom: "1px solid #f0f0f0",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    transition: "background-color 0.2s",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = "#f8f9fa";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = "white";
-                  }}
+                  key={s.id}
+                  onClick={() => handleSelectSuggestion(s)}
+                  className="px-3 py-2 text-sm hover:bg-gray-100 cursor-pointer flex items-center gap-2"
                 >
-                  <span style={{ fontSize: "16px" }}>
-                    {getSuggestionIcon(suggestion.place_type)}
-                  </span>
-                  <div style={{ flex: 1 }}>
-                    <div
-                      style={{
-                        color: "#000",
-                        fontWeight: "500",
-                        fontSize: "14px",
-                        lineHeight: "1.2",
-                      }}
-                    >
-                      {formatSuggestion(suggestion)}
-                    </div>
-                    <div
-                      style={{
-                        color: "#666",
-                        fontSize: "12px",
-                        marginTop: "2px",
-                      }}
-                    >
-                    </div>
-                  </div>
+                  <span>{getSuggestionIcon(s.place_type)}</span>
+                  <span>{formatSuggestion(s)}</span>
                 </li>
               ))}
             </ul>
           )}
 
-          {/* Message si aucun résultat */}
-          {searchTerm.length >= 2 &&
-            suggestions.length === 0 &&
-            !isSearching && (
-              <div
-                style={{
-                  position: "absolute",
-                  top: "100%",
-                  left: 0,
-                  width: "100%",
-                  background: "white",
-                  borderRadius: "0 0 8px 8px",
-                  boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-                  padding: "12px",
-                  zIndex: 1000,
-                  border: "1px solid #e0e0e0",
-                  borderTop: "none",
-                  color: "#666",
-                  fontSize: "14px",
-                  textAlign: "center",
-                }}
-              >
-                Aucun résultat trouvé
-              </div>
-            )}
+          {searchTerm.length >= 2 && suggestions.length === 0 && !isSearching && (
+            <div className="absolute top-full left-0 w-full bg-white border border-t-0 border-gray-300 rounded-b-lg shadow-md z-50 px-4 py-2 text-sm text-center text-gray-500">
+              Aucun résultat trouvé
+            </div>
+          )}
         </div>
       </div>
 
@@ -375,10 +261,10 @@ const MapBox = () => {
       <Map
         {...viewState}
         onMove={(evt) => setViewState(evt.viewState)}
-        mapboxAccessToken={MAPBOX_TOKEN}
+        mapboxAccessToken={import.meta.env.VITE_MAPBOX_TOKEN}
         mapStyle="mapbox://styles/mapbox/streets-v11"
-        style={{ width: "100%", height: "100%" }}
-        maxBounds={franceBounds}
+        className="w-full h-full"
+        maxBounds={[[-4.8, 42.0], [9.3, 51.1]]}
       >
         {filteredEvents.map((event) => (
           <Marker
@@ -394,21 +280,12 @@ const MapBox = () => {
             <img src={event.image_url} alt="marker" width={30} />
           </Marker>
         ))}
-
-        {selectedEvent && (
-          <Popup
-            longitude={selectedEvent.longitude}
-            latitude={selectedEvent.latitude}
-            anchor="top"
-            onClose={() => setSelectedEvent(null)}
-          >
-            <div style={{ color: "#000" }}>
-              <h3>{selectedEvent.titre}</h3>
-              <p>{selectedEvent.description}</p>
-            </div>
-          </Popup>
-        )}
       </Map>
+
+      {/* Modal événement */}
+      {selectedEvent && (
+        <EventModal event={selectedEvent} onClose={() => setSelectedEvent(null)} />
+      )}
     </div>
   );
 };
