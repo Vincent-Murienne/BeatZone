@@ -36,7 +36,6 @@ const MapComponent = ({ onEventSelect }: MapBoxProps) => {
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 100]);
   const [hasSelectedSuggestion, setHasSelectedSuggestion] = useState(false);
 
-
   const [viewState, setViewState] = useState<ViewState>({
     longitude: 2.3488,
     latitude: 48.8534,
@@ -51,10 +50,106 @@ const MapComponent = ({ onEventSelect }: MapBoxProps) => {
     [9.3, 51.1],
   ];
 
-  const formatSuggestion = (s: Suggestion) =>
-    s.place_name || s.text;
+  const getSuggestionIcon = () => "📍";
 
-    useEffect(() => {
+  const handleClearSearch = () => {
+    setSearchTerm("");
+    setSuggestions([]);
+    setFilteredEvents(events);
+    setHasSelectedSuggestion(false);
+  };
+
+  const [userLocation, setUserLocation] = useState<{
+    latitude: number;
+    longitude: number;
+  } | null>(null);
+
+  const formatSuggestion = (s: Suggestion) => s.place_name || s.text;
+
+  const handlePriceRangeChange = (range: [number, number]) => {
+    if (range[0] !== priceRange[0] || range[1] !== priceRange[1]) {
+      setPriceRange(range);
+    }
+  };
+
+  const handleSelectSuggestion = (suggestion: Suggestion) => {
+    const matchedEvent = events.find((event) => {
+      const suggestionText = suggestion.place_name.toLowerCase();
+      const suggestionParts = suggestionText.split(',').map(part => part.trim());
+      const exactAddressMatch = suggestionParts[0] && event.adresse.toLowerCase() === suggestionParts[0];
+      const exactCityMatch = suggestionParts.length > 1 && event.ville.toLowerCase() === suggestionParts[suggestionParts.length - 1];
+      const exactPostalMatch = event.code_postal && suggestionParts.some(part => part === String(event.code_postal));
+      const isExactMatch = exactAddressMatch && (exactCityMatch || exactPostalMatch);
+      
+      return isExactMatch;
+    });
+
+    if (matchedEvent) {
+      // Zoom sur l'événement trouvé
+      setViewState((prev) => ({
+        ...prev,
+        longitude: matchedEvent.longitude,
+        latitude: matchedEvent.latitude,
+        zoom: 15,
+      }));
+    } else {
+      const suggestionParts = suggestion.place_name.split(',').map(part => part.trim());
+      const cityName = suggestionParts[suggestionParts.length - 1];
+      const eventsInCity = events.filter(event => 
+        event.ville.toLowerCase().includes(cityName.toLowerCase())
+      );
+      
+      if (eventsInCity.length > 0) {
+        const avgLat = eventsInCity.reduce((sum, event) => sum + event.latitude, 0) / eventsInCity.length;
+        const avgLng = eventsInCity.reduce((sum, event) => sum + event.longitude, 0) / eventsInCity.length;
+        
+        setViewState((prev) => ({
+          ...prev,
+          longitude: avgLng,
+          latitude: avgLat,
+          zoom: 13,
+        }));
+      }
+    }
+    setHasSelectedSuggestion(true);
+    setSearchTerm(formatSuggestion(suggestion));
+    setSuggestions([]);
+  };
+
+  const fetchSuggestions = useCallback(async () => {
+    if (searchTerm.length < 2) {
+      setSuggestions([]);
+      setIsSearching(false);
+      return;
+    }
+
+    setIsSearching(true);
+
+    try {
+      const res = await fetch(`${API_URL}/suggestions`);
+      const allSuggestions: string[] = await res.json();
+
+      const filtered = allSuggestions
+        .filter((s) => s.toLowerCase().includes(searchTerm.toLowerCase()))
+        .slice(0, 10)
+        .map((s) => ({
+          id: s,
+          place_name: s,
+          text: s,
+          center: undefined,
+          place_type: ["custom"],
+        }));
+
+      setSuggestions(filtered);
+    } catch (error) {
+      console.error("Erreur suggestions locales :", error);
+      setSuggestions([]);
+    } finally {
+      setIsSearching(false);
+    }
+  }, [searchTerm]);
+
+  useEffect(() => {
     const fetchEvents = async () => {
       try {
         const res = await fetch(`${API_URL}/events`);
@@ -107,133 +202,32 @@ const MapComponent = ({ onEventSelect }: MapBoxProps) => {
     setFilteredEvents(filtered);
   }, [events, dateFilter, selectedGenre, priceRange]);
 
-  const fetchSuggestions = useCallback(async () => {
-    if (searchTerm.length < 2) {
-      setSuggestions([]);
-      setIsSearching(false);
-      return;
-    }
-
-    setIsSearching(true);
-
-    try {
-      const res = await fetch(`${API_URL}/suggestions`);
-      const allSuggestions: string[] = await res.json();
-
-      const filtered = allSuggestions
-        .filter((s) => s.toLowerCase().includes(searchTerm.toLowerCase()))
-        .slice(0, 10)
-        .map((s) => ({
-          id: s,
-          place_name: s,
-          text: s,
-          center: undefined,
-          place_type: ["custom"],
-        }));
-
-      setSuggestions(filtered);
-    } catch (error) {
-      console.error("Erreur suggestions locales :", error);
-      setSuggestions([]);
-    } finally {
-      setIsSearching(false);
-    }
-  }, [searchTerm]);
-
-const handlePriceRangeChange = (range: [number, number]) => {
-  if (range[0] !== priceRange[0] || range[1] !== priceRange[1]) {
-    setPriceRange(range);
-  }
-};
-
   useEffect(() => {
     const timeoutId = setTimeout(fetchSuggestions, 300);
     return () => clearTimeout(timeoutId);
   }, [searchTerm, fetchSuggestions]);
 
+  useEffect(() => {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
 
-const handleSelectSuggestion = (suggestion: Suggestion) => {
-  const matchedEvent = events.find((event) => {
-    const suggestionText = suggestion.place_name.toLowerCase();
-    const suggestionParts = suggestionText.split(',').map(part => part.trim());
-    const exactAddressMatch = suggestionParts[0] && event.adresse.toLowerCase() === suggestionParts[0];
-    const exactCityMatch = suggestionParts.length > 1 && event.ville.toLowerCase() === suggestionParts[suggestionParts.length - 1];
-    const exactPostalMatch = event.code_postal && suggestionParts.some(part => part === String(event.code_postal));
-    const isExactMatch = exactAddressMatch && (exactCityMatch || exactPostalMatch);
-    
-    return isExactMatch;
-  });
+          setViewState((prev) => ({
+            ...prev,
+            latitude,
+            longitude,
+            zoom: 13,
+          }));
 
-  if (matchedEvent) {
-    // Zoom sur l'événement trouvé
-    setViewState((prev) => ({
-      ...prev,
-      longitude: matchedEvent.longitude,
-      latitude: matchedEvent.latitude,
-      zoom: 15,
-    }));
-  } else {
-    const suggestionParts = suggestion.place_name.split(',').map(part => part.trim());
-    const cityName = suggestionParts[suggestionParts.length - 1];
-    const eventsInCity = events.filter(event => 
-      event.ville.toLowerCase().includes(cityName.toLowerCase())
-    );
-    
-    if (eventsInCity.length > 0) {
-      const avgLat = eventsInCity.reduce((sum, event) => sum + event.latitude, 0) / eventsInCity.length;
-      const avgLng = eventsInCity.reduce((sum, event) => sum + event.longitude, 0) / eventsInCity.length;
-      
-      setViewState((prev) => ({
-        ...prev,
-        longitude: avgLng,
-        latitude: avgLat,
-        zoom: 13,
-      }));
+          setUserLocation({ latitude, longitude });
+        },
+        (error) => {
+          console.warn("Permission refusée ou erreur de géolocalisation :", error);
+        }
+      );
     }
-  }
-
-  setHasSelectedSuggestion(true);
-  setSearchTerm(formatSuggestion(suggestion));
-  setSuggestions([]);
-
-};
-
-
-  const getSuggestionIcon = () => "📍";
-
-  const handleClearSearch = () => {
-    setSearchTerm("");
-    setSuggestions([]);
-    setFilteredEvents(events);
-    setHasSelectedSuggestion(false);
-  };
-
-  const [userLocation, setUserLocation] = useState<{
-  latitude: number;
-  longitude: number;
-} | null>(null);
-
-useEffect(() => {
-  if ("geolocation" in navigator) {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-
-        setViewState((prev) => ({
-          ...prev,
-          latitude,
-          longitude,
-          zoom: 13,
-        }));
-
-        setUserLocation({ latitude, longitude });
-      },
-      (error) => {
-        console.warn("Permission refusée ou erreur de géolocalisation :", error);
-      }
-    );
-  }
-}, []); 
+  }, []); 
 
   return (
     <div className="h-screen w-screen relative">

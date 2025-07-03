@@ -6,5 +6,4 @@ export default async function eventRoutes(fastify: FastifyInstance) {
   fastify.get("/suggestions", getAllSuggestions);
   fastify.get("/genres", getAllGenres);
   fastify.get("/prices", getAllPrices);
-  
 }

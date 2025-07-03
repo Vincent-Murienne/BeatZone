@@ -25,7 +25,6 @@ function formatHour(date: Date): string {
   return minutes === 0 ? `${hours}h` : `${hours}h${minutes.toString().padStart(2, '0')}`;
 }
 
-
 const EventModal = ({ event, onClose }: EventModalProps) => {
   const status = getEventStatus(event);
 
