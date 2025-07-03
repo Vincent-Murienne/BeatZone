@@ -11,7 +11,11 @@ app.register(helmet)
 const PORT = Number(process.env.PORT)
 
 app.get('/', async () => {
-    return { hello: 'world' }
+    let { data: users, error } = await supabase
+    .from('users')
+    .select('*')
+    
+    return { users }
 })
 
 app.listen({ 

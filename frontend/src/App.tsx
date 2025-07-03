@@ -1,14 +1,11 @@
-import MapBox from "./components/Map";
-import './App.css'
+import AppRouter from "./routes/router";
 
 function App() {
-  return (
-    <>
-      <div>
-        <MapBox />
-      </div>
-    </>
-  );
+	return (
+		<>
+			<AppRouter />
+		</>
+	);
 }
 
-export default App
+export default App;
