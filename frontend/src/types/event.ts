@@ -4,10 +4,13 @@ export interface Event {
   description: string;
   debut: string;
   fin: string;
-  adresse: string;
   latitude: number;
   longitude: number;
+  adresse: string;
+  code_postal: number;
   ville: string;
+  genre: string;
+  prix: number;
   cree_le: string;
   image_url: string;
 }
