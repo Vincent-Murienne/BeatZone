@@ -13,6 +13,7 @@
     "@tailwindcss/vite": "^4.1.11",
     "@tanstack/react-query": "^5.81.5",
     "axios": "^1.10.0",
+    "framer-motion": "^12.23.0",
     "mapbox-gl": "^2.14.1",
     "modern-normalize": "^3.0.1",
     "react": "^19.1.0",
