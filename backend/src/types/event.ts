@@ -1,5 +1,5 @@
 export interface Event {
-  id_event: string;
+  id_event: number;
   titre: string;
   description: string;
   debut: string;
@@ -13,4 +13,5 @@ export interface Event {
   prix: number;
   cree_le: string;
   image_url: string;
+  infos_complementaires: string;
 }

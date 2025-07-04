@@ -1,51 +1,55 @@
 import { FastifyRequest, FastifyReply } from "fastify";
-import { supabase } from "../db";
-import { Event } from "../types/event";
+import {
+    fetchAllEvents,
+    fetchEventById,
+    fetchUniqueFieldValues,
+    fetchUniqueSuggestions,
+    fetchUniquePrices,
+} from "../models/eventModel";
 
-// Fonction générique pour récupérer les valeurs uniques d'un champ
-async function getUniqueFieldValues(
-    reply: FastifyReply,
-    field: string
-): Promise<void> {
-    const { data, error } = await supabase
-        .from("event")
-        .select(field)
-        .neq(field, "");
+// GET /events
+export const getAllEvents = async (_req: FastifyRequest, reply: FastifyReply) => {
+    const { data, error } = await fetchAllEvents();
+    if (error) return reply.status(500).send({ error: error.message });
+    return reply.send(data);
+};
 
-    if (error) {
-        reply.status(500).send({ error: error.message });
-        return;
-    }
+// GET /event/:id
+export const getEventById = async (req: FastifyRequest, reply: FastifyReply) => {
+    const { id } = req.params as { id: string };
+    const { data, error } = await fetchEventById(id);
+    if (error) return reply.status(500).send({ error: error.message });
+    return reply.send(data);
+};
 
-    // Filtrer les valeurs uniques et non vides
-    const uniqueValues = Array.from(
-        new Set(
-        data
-            .map((item: Record<string, any>) => item[field])
-            .filter(Boolean)
-        )
+// GET /events/genres
+export const getAllGenres = async (_req: FastifyRequest, reply: FastifyReply) => {
+    const { data, error } = await fetchUniqueFieldValues("genre");
+    if (error) return reply.status(500).send({ error: error.message });
+
+    const uniqueGenres = Array.from(
+        new Set(data.map((item: Record<string, any>) => item.genre).filter(Boolean))
     );
 
-    reply.send(uniqueValues);
-}
+    return reply.send(uniqueGenres);
+};
 
-// Fonction spécifique pour les suggestions qui combine plusieurs champs
-async function getUniqueSuggestions(
-    reply: FastifyReply
-): Promise<void> {
-    const now = new Date().toISOString();
-    const { data, error } = await supabase
-        .from("event")
-        .select("adresse, code_postal, ville")
-        .neq("adresse", "")
-        .neq("code_postal", "")
-        .neq("ville", "")
-        .or(`and(debut.lte.${now},fin.gte.${now}),debut.gte.${now}`);
+// GET /events/prices
+export const getAllPrices = async (_req: FastifyRequest, reply: FastifyReply) => {
+    const { data, error } = await fetchUniquePrices();
+    if (error) return reply.status(500).send({ error: error.message });
 
-    if (error) {
-        reply.status(500).send({ error: error.message });
-        return;
-    }
+    const uniquePrices = Array.from(
+        new Set(data.map(({ prix }) => prix).filter((p) => typeof p === "number" && !isNaN(p)))
+    );
+
+    return reply.send(uniquePrices);
+};
+
+// GET /events/suggestions
+export const getAllSuggestions = async (_req: FastifyRequest, reply: FastifyReply) => {
+    const { data, error } = await fetchUniqueSuggestions();
+    if (error) return reply.status(500).send({ error: error.message });
 
     const seen = new Set<string>();
     const suggestions = data
@@ -56,46 +60,5 @@ async function getUniqueSuggestions(
         return true;
         });
 
-    reply.send(suggestions);
-}
-
-export const getAllEvents = async (req: FastifyRequest, reply: FastifyReply) => {
-    const now = new Date().toISOString();
-
-    const { data, error } = await supabase
-        .from("event")
-        .select("*")
-        .or(`and(debut.lte.${now},fin.gte.${now}),debut.gte.${now}`);
-
-    if (error) {
-        return reply.status(500).send({ error: error.message });
-    }
-
-    return reply.send(data as Event[]);
+    return reply.send(suggestions);
 };
-
-export const getAllSuggestions = async (req: FastifyRequest, reply: FastifyReply) => {
-    return getUniqueSuggestions(reply);
-};
-
-export const getAllGenres = async (req: FastifyRequest, reply: FastifyReply) => {
-    return getUniqueFieldValues(reply, "genre");
-};
-
-export const getAllPrices = async (req: FastifyRequest, reply: FastifyReply) => {
-    const { data, error } = await supabase
-        .from("event")
-        .select("prix")
-        .not("prix", "is", null);
-
-    if (error) {
-        return reply.status(500).send({ error: error.message });
-    }
-
-    const uniquePrices = Array.from(
-        new Set(data.map(({ prix }) => prix).filter((p) => typeof p === "number" && !isNaN(p)))
-    );
-
-    return reply.send(uniquePrices);
-};
-

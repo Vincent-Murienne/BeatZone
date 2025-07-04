@@ -1,3 +1,5 @@
+import type { Band } from "./band";
+
 export interface Event {
   id_event: string;
   titre: string;
@@ -13,4 +15,6 @@ export interface Event {
   prix: number;
   cree_le: string;
   image_url: string;
+  infos_complementaires: string;
+  jouer?: { band: Band }[];
 }
