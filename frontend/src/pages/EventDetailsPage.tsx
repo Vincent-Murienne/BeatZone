@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import type { Event } from "../types/event";
 import EventDetails from "../components/EventDetails";
+import BandCard from "../components/BandCard";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -44,6 +45,10 @@ export default function EventDetailsPage() {
             showActions={true}
             showViewMoreButton={false}
             />
+
+            {event.jouer && (
+                <BandCard bands={event.jouer.map((j) => j.band)} />
+            )}
         </div>
         </div>
     );

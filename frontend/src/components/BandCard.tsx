@@ -1,0 +1,33 @@
+import type { Band } from "../types/band";
+import { Link } from "react-router-dom";
+
+type BandCardProps = {
+    bands: Band[];
+};
+
+export default function BandCard({ bands }: BandCardProps) {
+    if (!bands || bands.length === 0) return null;
+
+    return (
+        <div className="mt-8">
+        <h2 className="text-2xl font-semibold mb-4">Artistes / Groupes</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            {bands.map((band) => (
+            <Link
+                to={`/band/${band.id_band}`}
+                key={band.id_band}
+                className="bg-white shadow-md rounded-2xl p-4 hover:shadow-lg transition cursor-pointer"
+            >
+                <img
+                src={band.image_url}
+                alt={band.nom}
+                className="w-full h-48 object-cover rounded-xl mb-3"
+                />
+                <h3 className="text-lg font-bold">{band.nom}</h3>
+                <p className="text-sm text-gray-600">{band.genre}</p>
+            </Link>
+            ))}
+        </div>
+        </div>
+    );
+}

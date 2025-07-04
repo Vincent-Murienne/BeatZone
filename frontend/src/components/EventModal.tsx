@@ -28,7 +28,7 @@ const EventModal = ({ event, onClose }: EventModalProps) => {
           <EventDetails 
           event={event} 
           showInfosComplementaires={false}
-          showArtists={false}
+          showArtists={true}
           showActions={true}  
           showViewMoreButton={true}
           />

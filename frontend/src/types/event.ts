@@ -16,5 +16,9 @@ export interface Event {
   cree_le: string;
   image_url: string;
   infos_complementaires: string;
-  jouer?: { band: Band }[];
+  jouer?: {
+    band: Band;
+    debut_passage: string | null;
+    fin_passage: string | null;
+  }[];
 }

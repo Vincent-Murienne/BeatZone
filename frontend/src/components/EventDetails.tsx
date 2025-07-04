@@ -70,11 +70,21 @@ export default function EventDetails({
             </p>
 
             {showArtists && event.jouer && event.jouer.length > 0 && (
-                <p>
-                <span className="font-semibold">🎤 Artiste(s) :</span>{" "}
-                {event.jouer.map(({ band }) => band.nom).join(", ")}
-                </p>
+            <div>
+                <p className="font-semibold">🎤 Artiste(s) :</p>
+                <ul className="pl-4 list-disc">
+                {event.jouer.map(({ band, debut_passage, fin_passage }) => (
+                    <li key={band.id_band}>
+                    {band.nom}
+                    {(debut_passage && fin_passage) && (
+                        <> — {formatHour(new Date(debut_passage))} → {formatHour(new Date(fin_passage))}</>
+                    )}
+                    </li>
+                ))}
+                </ul>
+            </div>
             )}
+
             </div>
 
             {showInfosComplementaires && event.infos_complementaires && (
