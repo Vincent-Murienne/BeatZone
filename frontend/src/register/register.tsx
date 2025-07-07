@@ -248,7 +248,7 @@ function Register() {
                         {/* Lien vers la connexion */}
                         <p className="text-center text-gray-600 text-sm mt-8">
                             Déjà un compte ?{' '}
-                            <a href="" className="text-purple-600 hover:text-purple-500 transition-colors font-medium">
+                            <a href="/login" className="text-purple-600 hover:text-purple-500 transition-colors font-medium">
                                 Se connecter
                             </a>
                         </p>

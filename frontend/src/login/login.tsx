@@ -180,7 +180,7 @@ function Login() {
                         {/* Lien inscription */}
                         <p className="text-center text-gray-600 text-sm">
                             Pas encore de compte ?{' '}
-                            <a href="#" className="text-purple-600 hover:text-purple-500 transition-colors font-medium">
+                            <a href="/register" className="text-purple-600 hover:text-purple-500 transition-colors font-medium">
                                 S'inscrire
                             </a>
                         </p>

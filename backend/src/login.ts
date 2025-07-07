@@ -3,9 +3,7 @@ import { supabase } from './db'
 
 async function loginRoutes(app: FastifyInstance, options: FastifyPluginOptions) {
     app.post('/api/login', async (request, reply) => {
-        console.log('Reçu requête /api/login');
         const body = request.body as any;
-        console.log(body);
 
         const { email, password } = body;
 
@@ -18,10 +16,9 @@ async function loginRoutes(app: FastifyInstance, options: FastifyPluginOptions) 
                 email: email,
                 password: password
             });
-
+            
             if (error) {
-                console.error('Erreur de connexion:', error);
-                return reply.code(401).send({ message: 'Identifiants invalides mon pote' });
+                return reply.code(error?.status || 400).send({ message: error?.code || 'Identifiants invalides mon pote' });
             }
 
             console.log('Utilisateur connecté:', data.user);
