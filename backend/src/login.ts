@@ -16,12 +16,18 @@ async function loginRoutes(app: FastifyInstance, options: FastifyPluginOptions) 
                 email: email,
                 password: password
             });
+            console.log("data", data);
+            console.log("error", error?.name);
             
             if (error) {
-                return reply.code(error?.status || 400).send({ message: error?.code || 'Identifiants invalides mon pote' });
+                if (error.code === 'invalid_credentials') {
+                    return reply.code(400).send({ message: 'Identifiants invalides mon pote' });
+                }
+                if (error.code === 'email_not_verified') {
+                    return reply.code(400).send({ message: 'Email non vérifié' });
+                }
             }
 
-            console.log('Utilisateur connecté:', data.user);
             return reply.code(200).send({
                 message: 'Connexion réussie',
                 user: data.user,
@@ -29,7 +35,6 @@ async function loginRoutes(app: FastifyInstance, options: FastifyPluginOptions) 
             });
 
         } catch (err) {
-            console.error('Erreur lors de la connexion:', err);
             return reply.code(500).send({ message: 'Erreur interne du serveur' });
         }
     });

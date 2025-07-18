@@ -6,7 +6,8 @@ import loginRoutes from './login'
 
 const app = Fastify()
 app.register(cors, {
-    origin: '*',
+    origin: 'http://localhost:5173',
+    credentials: true,
 })
 
 app.register(registerRoutes)
