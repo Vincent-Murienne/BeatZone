@@ -1,8 +1,10 @@
-import Fastify from 'fastify'
+import Fastify, { fastify } from 'fastify'
 import cors from '@fastify/cors'
 import helmet from '@fastify/helmet'
 import registerRoutes from './register'
 import loginRoutes from './login'
+import eventRoute from "./routes/eventRoute";
+import bandRoute from "./routes/bandRoute";
 
 const app = Fastify()
 app.register(cors, {
@@ -30,5 +32,8 @@ app.listen({
     }
     console.log(`🚀 Serveur démarré sur ${address}`)
 })
+
+app.register(eventRoute, { prefix: "/api" });
+app.register(bandRoute, { prefix: "/api" });
 
 export default app;

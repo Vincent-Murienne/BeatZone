@@ -1,0 +1,12 @@
+@import "modern-normalize/modern-normalize.css";
+@import "tailwindcss";
+
+:root {
+    --royal-purple: #764BA2;
+    --cornflower-blue: #667EEA;
+}
+
+.linear-gradient-hero {
+    background: linear-gradient(135deg, var(--cornflower-blue) 0%, var(--royal-purple) 100%);
+    /* overflow-x: hidden; */
+}
