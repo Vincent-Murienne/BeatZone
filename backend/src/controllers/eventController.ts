@@ -1,8 +1,9 @@
 import { FastifyRequest, FastifyReply } from "fastify";
+import type { Event } from "../types/event";
 import {
     fetchAllEvents,
     fetchEventById,
-    fetchUniqueFieldValues,
+    fetchUniqueGenres,
     fetchUniqueSuggestions,
     fetchUniquePrices,
 } from "../models/eventModel";
@@ -11,7 +12,10 @@ import {
 export const getAllEvents = async (_req: FastifyRequest, reply: FastifyReply) => {
     const { data, error } = await fetchAllEvents();
     if (error) return reply.status(500).send({ error: error.message });
-    return reply.send(data);
+    if (!data) return reply.send([]);
+
+    const typedEvents = data as unknown as Event[];
+    return reply.send(typedEvents);
 };
 
 // GET /event/:id
@@ -19,19 +23,31 @@ export const getEventById = async (req: FastifyRequest, reply: FastifyReply) => 
     const { id } = req.params as { id: string };
     const { data, error } = await fetchEventById(id);
     if (error) return reply.status(500).send({ error: error.message });
-    return reply.send(data);
+    if (!data) return reply.status(404).send({ error: "Événement non trouvé" });
+
+    const typedEvent = data as unknown as Event;
+    return reply.send(typedEvent);
 };
 
 // GET /events/genres
 export const getAllGenres = async (_req: FastifyRequest, reply: FastifyReply) => {
-    const { data, error } = await fetchUniqueFieldValues("genre");
+    const { data, error } = await fetchUniqueGenres();
     if (error) return reply.status(500).send({ error: error.message });
+    if (!data) return reply.send([]);
 
-    const uniqueGenres = Array.from(
-        new Set(data.map((item: Record<string, any>) => item.genre).filter(Boolean))
-    );
+    const genres = new Set<string>();
 
-    return reply.send(uniqueGenres);
+    for (const event of data as unknown as Event[]) {
+        for (const passage of event.jouer || []) {
+            const band = passage.band;
+            for (const a of band.avoir || []) {
+                const genre = a.genre?.type_musique;
+                if (genre) genres.add(genre);
+            }
+        }
+    }
+
+    return reply.send(Array.from(genres));
 };
 
 // GET /events/prices

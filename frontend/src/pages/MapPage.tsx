@@ -67,7 +67,9 @@ export default function MapPage() {
             (dateFilter === "current" && debut <= now && now <= fin) ||
             (dateFilter === "upcoming" && now < debut);
 
-            const genreOk = selectedGenre === "all" || event.genre === selectedGenre;
+            const genreOk =
+                selectedGenre === "all" ||
+                extractGenresFromEvent(event).includes(selectedGenre);
             const prixOk = prix >= priceRange[0] && prix <= priceRange[1];
 
             const searchOk =
@@ -137,6 +139,19 @@ export default function MapPage() {
             }));
             }
         }
+    }
+
+    function extractGenresFromEvent(event: Event): string[] {
+        const genres = new Set<string>();
+
+        event.jouer?.forEach((passage) => {
+            passage.band?.avoir?.forEach((a) => {
+                const genre = a.genre?.type_musique;
+                if (genre) genres.add(genre);
+            });
+        });
+
+        return Array.from(genres);
     }
 
     return (
