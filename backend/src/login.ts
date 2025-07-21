@@ -17,12 +17,13 @@ async function loginRoutes(app: FastifyInstance, options: FastifyPluginOptions) 
                 password: password
             });
 
+            
             if (error) {
                 if (error.code === 'invalid_credentials') {
                     return reply.code(400).send({ message: 'Identifiants invalides mon pote' });
                 }
-                if (error.code === 'email_not_verified') {
-                    return reply.code(400).send({ message: 'Email non vérifié' });
+                if (error.code === 'email_not_confirmed') {
+                    return reply.code(400).send({ message: 'Email non confirmé' });
                 }
             }
 
