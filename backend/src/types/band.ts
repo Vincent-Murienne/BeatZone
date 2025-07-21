@@ -4,7 +4,6 @@ export interface Band {
     id_band: number;
     nom: string;
     description: string;
-    genre: string;
     ville: string;
     pays: string;
     image_url: string;

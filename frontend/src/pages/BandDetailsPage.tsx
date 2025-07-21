@@ -76,9 +76,21 @@ export default function BandDetailsPage() {
             <User className="text-blue-500" />
             <p><span className="font-semibold">Nombre de membres :</span> {band.nombre_membres}</p>
             </div> */}
-            <div className="flex items-center gap-2">
+            {/* <div className="flex items-center gap-2">
             <Music className="text-pink-500" />
             <p><span className="font-semibold">Style :</span> {band.genre}</p>
+            </div> */}
+            <div className="mt-4">
+                <h3 className="text-lg font-semibold mb-1">Genres musicaux :</h3>
+                {band.avoir && band.avoir.length > 0 ? (
+                    <ul className="list-disc list-inside text-sm text-gray-700">
+                    {band.avoir.map((a, index) => (
+                        <li key={index}>{a.genre?.type_musique}</li>
+                    ))}
+                    </ul>
+                ) : (
+                    <p className="text-sm text-gray-500">Aucun genre renseigné.</p>
+                )}
             </div>
             <div className="flex items-center gap-2">
             <MapPin className="text-green-500" />

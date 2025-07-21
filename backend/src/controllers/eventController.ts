@@ -26,7 +26,20 @@ export const getEventById = async (req: FastifyRequest, reply: FastifyReply) => 
     if (!data) return reply.status(404).send({ error: "Événement non trouvé" });
 
     const typedEvent = data as unknown as Event;
-    return reply.send(typedEvent);
+
+    const genresSet = new Set<string>();
+    for (const passage of typedEvent.jouer || []) {
+        const band = passage.band;
+        for (const avoir of band.avoir || []) {
+            const genre = avoir.genre?.type_musique;
+            if (genre) genresSet.add(genre);
+        }
+    }
+
+    return reply.send({
+        ...typedEvent,
+        genres: Array.from(genresSet)
+    });
 };
 
 // GET /events/genres

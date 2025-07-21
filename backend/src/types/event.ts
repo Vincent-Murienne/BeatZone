@@ -11,7 +11,6 @@ export interface Event {
   adresse: string;
   code_postal: number;
   ville: string;
-  genre: string;
   prix: number;
   cree_le: string;
   image_url: string;
