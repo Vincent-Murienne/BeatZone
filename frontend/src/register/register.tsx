@@ -32,6 +32,7 @@ function Register() {
                 type: 'artist',
                 email: artistEmail,
                 password: artistPassword,
+                pseudo: artistName,
                 bio: null,
                 genre: artistGenre,
                 website: null,
@@ -180,6 +181,7 @@ function Register() {
                                                 value={artistEmail}
                                                 onChange={(e) => setArtistEmail(e.target.value)}
                                                 className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                                autoComplete='new-email'
                                                 required
                                             />
                                             <input
@@ -188,6 +190,7 @@ function Register() {
                                                 value={artistPassword}
                                                 onChange={(e) => setArtistPassword(e.target.value)}
                                                 className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                                autoComplete='new-password'
                                                 required
                                             />
                                         </>
