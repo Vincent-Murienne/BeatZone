@@ -1,10 +1,12 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import RegisterPage from '../pages/RegisterPage'
 import LoginPage from '../pages/LoginPage'
-import AuthCallback from '../auth/callback'
 import PublicRoute from '../auth/guards/PublicRoute'
+import BandDetailsPage from '../pages/BandDetailsPage'
+import LandingPage from '../pages/LandingPage'
+import MapPage from '../pages/MapPage'
+import EventDetailsPage from '../pages/EventDetailsPage'
 import ProtectedRoute from '../auth/guards/ProtectedRoute'
-import MainPage from '../pages/MainPage'
 
 function AppRouter() {
     return (
@@ -20,10 +22,23 @@ function AppRouter() {
                         <LoginPage />
                     </PublicRoute>
                 } />
-                <Route path="/auth/callback" element={<AuthCallback />} />
+                {/* <Route path="/auth/callback" element={<AuthCallback />} /> */}
                 <Route path="/" element={
+                    <LandingPage />
+                } />
+                <Route path="/map" element={
                     <ProtectedRoute>
-                        <MainPage />
+                        <MapPage />
+                    </ProtectedRoute>
+                } />
+                <Route path="/event/:id" element={
+                    <ProtectedRoute>
+                        <EventDetailsPage />
+                    </ProtectedRoute>
+                } />
+                <Route path="/band/:id" element={
+                    <ProtectedRoute>
+                        <BandDetailsPage />
                     </ProtectedRoute>
                 } />
             </Routes>
