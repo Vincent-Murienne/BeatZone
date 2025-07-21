@@ -3,6 +3,8 @@ import cors from '@fastify/cors'
 import helmet from '@fastify/helmet'
 import eventRoute from "./routes/eventRoute";
 import bandRoute from "./routes/bandRoute";
+import favoriteRoute from "./routes/favoriteRoute";
+
 
 const app = Fastify()
 app.register(cors, {
@@ -28,5 +30,7 @@ app.listen({
 
 app.register(eventRoute, { prefix: "/api" });
 app.register(bandRoute, { prefix: "/api" });
+app.register(favoriteRoute, { prefix: "/api" });
+
 
 export default app;
