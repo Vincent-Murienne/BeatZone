@@ -1,7 +1,7 @@
 import type { Band } from "./band";
 
 export interface Event {
-  id_event: string;
+  id_event: number;
   titre: string;
   description: string;
   debut: string;
@@ -11,7 +11,6 @@ export interface Event {
   adresse: string;
   code_postal: number;
   ville: string;
-  genre: string;
   prix: number;
   cree_le: string;
   image_url: string;

@@ -6,18 +6,22 @@ export const fetchAllEvents = async () => {
     return supabase
         .from("event")
         .select(`
-        *,
-        jouer (
-            debut_passage,
-            fin_passage,
-            band (
-            id_band,
-            nom,
-            genre,
-            description,
-            image_url
+            *,
+            jouer (
+                debut_passage,
+                fin_passage,
+                band (
+                    id_band,
+                    nom,
+                    description,
+                    image_url,
+                    avoir (
+                        genre (
+                            type_musique
+                        )
+                    )
+                )
             )
-        )
         `)
         .or(`and(debut.lte.${now},fin.gte.${now}),debut.gte.${now}`);
 };
@@ -31,11 +35,15 @@ export const fetchEventById = async (id_event: string) => {
             debut_passage,
             fin_passage,
             band (
-            id_band,
-            nom,
-            genre,
-            description,
-            image_url
+                id_band,
+                nom,
+                description,
+                image_url,
+                avoir (
+                    genre (
+                        type_musique
+                    )
+                )
             )
         )
         `)
@@ -43,11 +51,22 @@ export const fetchEventById = async (id_event: string) => {
         .single();
 };
 
-export const fetchUniqueFieldValues = async (field: string) => {
+export const fetchUniqueGenres = async () => {
+    const now = new Date().toISOString();
     return supabase
         .from("event")
-        .select(field)
-        .neq(field, "");
+        .select(`
+            jouer (
+                band (
+                    avoir (
+                        genre (
+                            type_musique
+                        )
+                    )
+                )
+            )
+        `)
+        .or(`and(debut.lte.${now},fin.gte.${now}),debut.gte.${now}`);
 };
 
 export const fetchUniqueSuggestions = async () => {
