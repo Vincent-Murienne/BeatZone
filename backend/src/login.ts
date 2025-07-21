@@ -16,9 +16,7 @@ async function loginRoutes(app: FastifyInstance, options: FastifyPluginOptions) 
                 email: email,
                 password: password
             });
-            console.log("data", data);
-            console.log("error", error?.name);
-            
+
             if (error) {
                 if (error.code === 'invalid_credentials') {
                     return reply.code(400).send({ message: 'Identifiants invalides mon pote' });
