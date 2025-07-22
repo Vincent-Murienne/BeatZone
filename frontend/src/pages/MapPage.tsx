@@ -3,9 +3,9 @@ import type { Event } from "../types/event";
 import type { ViewState } from "react-map-gl";
 import EventModal from "../components/EventModal";
 import MapComponent from "../components/MapComponent";
-import SearchBar from "../components/filtres/SearchBar";
+import SearchBarEvent from "../components/filtres/SearchBarEvent";
 import StatusEvenementFilter from "../components/filtres/StatusEvenementFilter";
-import GenreEvenementFilter from "../components/filtres/GenreEvenementFilter";
+import GenreMusicalFilter from "../components/filtres/GenreMusicalFilter";
 import PriceRangeFilter from "../components/filtres/PriceRangeFilter";
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -42,7 +42,7 @@ export default function MapPage() {
 
         const fetchGenres = async () => {
         try {
-            const res = await fetch(`${API_URL}/genres`);
+            const res = await fetch(`${API_URL}/events/genres`);
             const data = await res.json();
             setGenres(data);
         } catch {
@@ -158,7 +158,7 @@ export default function MapPage() {
         <main className="relative h-screen w-screen">
             {/* Filtres et barre de recherche */}
             <div className="absolute top-5 left-5 z-50 w-80">
-                <SearchBar
+                <SearchBarEvent
                     searchTerm={searchTerm}
                     setSearchTerm={setSearchTerm}
                     onSelectSuggestion={handleSelectSuggestion}
@@ -167,7 +167,7 @@ export default function MapPage() {
             </div>
             <div className="absolute top-5 right-5 z-50 w-64 p-3 bg-white rounded-lg shadow-lg space-y-3">
                 <StatusEvenementFilter value={dateFilter} onChange={setDateFilter} />
-                <GenreEvenementFilter value={selectedGenre} genres={genres} onChange={setSelectedGenre} />
+                <GenreMusicalFilter value={selectedGenre} genres={genres} onChange={setSelectedGenre} />
                 <PriceRangeFilter onChange={setPriceRange} />
             </div>
 

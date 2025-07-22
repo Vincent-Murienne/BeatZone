@@ -1,10 +1,10 @@
-interface GenreEvenementFilterProps {
+interface GenreMusicalFilterProps {
     value: string;
     genres: string[];
     onChange: (value: string) => void;
 }
 
-export default function GenreEvenementFilter({ value, genres, onChange }: GenreEvenementFilterProps) {
+export default function GenreMusicalFilter({ value, genres, onChange }: GenreMusicalFilterProps) {
     return (
         <div>
             <label htmlFor="genre-filter" className="sr-only">Filtrer par genre</label>
