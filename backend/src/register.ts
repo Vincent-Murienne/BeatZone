@@ -101,7 +101,7 @@ async function registerRoutes(app: FastifyInstance, options: FastifyPluginOption
                         }
                     }
 
-                    return reply.code(201).send({ message: 'Inscription réussie bien joué' });
+                    return reply.code(201).send({ message: 'Inscription réussie' });
                 } catch (err) {
                     return reply.code(500).send({ message: 'Erreur serveur interne (user)' });
                 }
