@@ -1,4 +1,4 @@
-
+import type { Role } from "./role";
 
 export interface Band {
     id_band: number;

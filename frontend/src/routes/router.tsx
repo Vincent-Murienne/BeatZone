@@ -9,6 +9,7 @@ import EventDetailsPage from '../pages/EventDetailsPage'
 import ProtectedRoute from '../auth/guards/ProtectedRoute'
 import ArtistDashboardPage from '../pages/ArtistDashboardPage'
 import ArtistRoute from '../auth/guards/ArtistRoute'
+import ProfilePage from '../pages/ProfilePage'
 
 function AppRouter() {
     return (
@@ -48,6 +49,13 @@ function AppRouter() {
                         <ArtistDashboardPage />
                     </ArtistRoute>
                 } />
+                <Route path="/profile" element={
+                    <ProtectedRoute>
+                        <ProfilePage />
+                    </ProtectedRoute>
+                } />
+
+                {/* Add more routes as needed */}
             </Routes>
         </BrowserRouter>
     )
