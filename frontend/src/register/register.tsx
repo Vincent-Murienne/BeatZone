@@ -142,20 +142,6 @@ function Register() {
                                             />
                                             Un utilisateur
                                         </label>
-                                        <label className={`w-full h-12 rounded-full flex items-center justify-center cursor-pointer transition-all duration-200 border-2 
-                                ${userType === 'artist'
-                                                ? 'bg-purple-100 text-black border-purple-800 shadow-[0_0_10px_2px_rgba(139,92,246,0.6)]'
-                                                : 'bg-gray-100 text-black border-transparent'}`}>
-                                            <input
-                                                type="radio"
-                                                name="userType"
-                                                value="artist"
-                                                className="hidden"
-                                                checked={userType === 'owner'}
-                                                onChange={() => setUserType('owner')}
-                                            />
-                                            Organisateur
-                                        </label>
                                     </div>
 
                                     <button
