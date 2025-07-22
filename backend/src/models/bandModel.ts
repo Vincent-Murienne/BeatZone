@@ -14,3 +14,16 @@ export const fetchBandById = async (id_band: string) => {
         .eq("id_band", id_band)
         .single();
 };
+
+export const fetchUserBand = async (userId: string) => {
+    return supabase
+        .from("band")
+        .select(`*,
+            avoir(
+                genre(
+                    type_musique
+                )
+            )`)
+        .eq("id_user", userId)
+        .single();
+}
