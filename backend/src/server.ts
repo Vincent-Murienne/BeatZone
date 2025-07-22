@@ -6,6 +6,8 @@ import loginRoutes from './login'
 import eventRoute from "./routes/eventRoute";
 import bandRoute from "./routes/bandRoute";
 import favoriteRoute from "./routes/favoriteRoute";
+import userRoutes from './routes/usersRoute';
+
 
 
 const app = Fastify()
