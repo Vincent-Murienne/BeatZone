@@ -44,34 +44,40 @@ export default function MapComponent({
           </Marker>
         )}
 
-        {events.map((event) => (
-          <Marker
-            key={event.id_event}
-            longitude={event.longitude}
-            latitude={event.latitude}
-            anchor="bottom"
-            onClick={(e) => {
-              e.originalEvent.stopPropagation();
-              onEventSelect(event);
-            }}
-          >
-            <div className="flex flex-col items-center space-y-1 group">
-              <div
-                className="w-12 h-12 rounded-full border-2 border-white shadow-md overflow-hidden cursor-pointer transform transition-transform group-hover:scale-110"
-                title={event.titre}
-              >
-                <img
-                  src={event.image_url}
-                  alt={event.titre}
-                  className="w-full h-full object-cover"
-                />
+        {events
+          .filter(
+            (event) =>
+              typeof event.owner?.longitude === "number" &&
+              typeof event.owner?.latitude === "number"
+          )
+          .map((event) => (
+            <Marker
+              key={event.id_event}
+              longitude={event.owner!.longitude}
+              latitude={event.owner!.latitude}
+              anchor="bottom"
+              onClick={(e) => {
+                e.originalEvent.stopPropagation();
+                onEventSelect(event);
+              }}
+            >
+              <div className="flex flex-col items-center space-y-1 group">
+                <div
+                  className="w-12 h-12 rounded-full border-2 border-white shadow-md overflow-hidden cursor-pointer transform transition-transform group-hover:scale-110"
+                  title={event.titre}
+                >
+                  <img
+                    src={event.image_url}
+                    alt={event.titre}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="bg-white text-xs text-gray-800 px-2 py-1 rounded-md shadow group-hover:bg-gray-100 whitespace-nowrap max-w-[100px] text-center truncate">
+                  {event.titre}
+                </div>
               </div>
-              <div className="bg-white text-xs text-gray-800 px-2 py-1 rounded-md shadow group-hover:bg-gray-100 whitespace-nowrap max-w-[100px] text-center truncate">
-                {event.titre}
-              </div>
-            </div>
-          </Marker>
-        ))}
+            </Marker>
+          ))}
       </Map>
     </div>
   );

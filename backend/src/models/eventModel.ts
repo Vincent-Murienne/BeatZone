@@ -13,10 +13,25 @@ export const fetchAllEvents = async () => {
             band (
             id_band,
             nom,
-            genre,
             description,
-            image_url
+            image_url,
+            avoir (
+                genre (
+                type_musique
+                )
             )
+            )
+        ),
+        owner (
+            id_owner,
+            nom_etablissement,
+            image_url,
+            adresse,
+            ville,
+            code_postal,
+            latitude,
+            longitude,
+            cree_le
         )
         `)
         .or(`and(debut.lte.${now},fin.gte.${now}),debut.gte.${now}`);
@@ -33,31 +48,59 @@ export const fetchEventById = async (id_event: string) => {
             band (
             id_band,
             nom,
-            genre,
             description,
-            image_url
+            image_url,
+            avoir (
+                genre (
+                type_musique
+                )
             )
+            )
+        ),
+        owner (
+            id_owner,
+            nom_etablissement,
+            image_url,
+            adresse,
+            ville,
+            code_postal,
+            latitude,
+            longitude,
+            cree_le
         )
         `)
         .eq("id_event", id_event)
         .single();
 };
 
-export const fetchUniqueFieldValues = async (field: string) => {
+
+export const fetchUniqueGenres = async () => {
+    const now = new Date().toISOString();
     return supabase
         .from("event")
-        .select(field)
-        .neq(field, "");
+        .select(`
+            jouer (
+                band (
+                    avoir (
+                        genre (
+                            type_musique
+                        )
+                    )
+                )
+            )
+        `)
+        .or(`and(debut.lte.${now},fin.gte.${now}),debut.gte.${now}`);
 };
 
 export const fetchUniqueSuggestions = async () => {
     const now = new Date().toISOString();
+
     return supabase
         .from("event")
-        .select("adresse, code_postal, ville")
-        .neq("adresse", "")
-        .neq("code_postal", "")
-        .neq("ville", "")
+        .select("id_owner(adresse, code_postal, ville)")
+        .not("id_owner.adresse", "is", null)
+        .not("id_owner.ville", "is", null)
+        .not("id_owner.code_postal", "is", null)
         .or(`and(debut.lte.${now},fin.gte.${now}),debut.gte.${now}`);
 };
 

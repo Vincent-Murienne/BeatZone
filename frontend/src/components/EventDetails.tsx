@@ -1,4 +1,3 @@
-// src/components/EventDetails.tsx
 import type { Event } from "../types/event";
 
 interface EventDetailsProps {
@@ -13,6 +12,19 @@ function formatHour(date: Date): string {
     const hours = date.getHours();
     const minutes = date.getMinutes();
     return minutes === 0 ? `${hours}h` : `${hours}h${minutes.toString().padStart(2, '0')}`;
+}
+
+function extractGenresFromEvent(event: Event): string[] {
+    const genres = new Set<string>();
+
+    event.jouer?.forEach((passage) => {
+        passage.band?.avoir?.forEach((a) => {
+            const genre = a.genre?.type_musique;
+            if (genre) genres.add(genre);
+        });
+    });
+
+    return Array.from(genres);
 }
 
 const getEventStatus = (event: Event): { label: string; emoji: string } | null => {
@@ -54,7 +66,7 @@ export default function EventDetails({
             <p className="text-gray-700 leading-relaxed">{event.description}</p>
 
             <div className="space-y-1 text-gray-700 text-sm mt-4">
-            <p><span className="font-semibold">📍 Adresse :</span> {event.adresse}, {event.code_postal} {event.ville}</p>
+            <p><span className="font-semibold">📍 Adresse :</span> {event.owner?.adresse}, {event.owner?.code_postal} {event.owner?.ville}</p>
             <p>
                 <span className="font-semibold">🗓️ Horaires :</span> Du{" "}
                 <span className="font-medium">{new Date(event.debut).toLocaleDateString()}</span> à{" "}
@@ -63,7 +75,10 @@ export default function EventDetails({
                 <span className="font-medium">{new Date(event.fin).toLocaleDateString()}</span> à{" "}
                 <span className="font-medium">{formatHour(new Date(event.fin))}</span>
             </p>
-            <p><span className="font-semibold">🎭 Genre :</span> {event.genre}</p>
+            <p>
+                <span className="font-semibold">🎭 Genre :</span>{" "}
+                {extractGenresFromEvent(event).join(", ") || "Non spécifié"}
+            </p>
             <p>
                 <span className="font-semibold">💸 Entrée :</span>{" "}
                 {event.prix > 0 ? `${event.prix} €` : <span className="text-green-600 font-semibold">Gratuit</span>}
@@ -115,7 +130,7 @@ export default function EventDetails({
                 )}
 
                 <a
-                href={`https://www.google.com/maps/dir/?api=1&destination=${event.latitude},${event.longitude}&travelmode=driving`}
+                href={`https://www.google.com/maps/dir/?api=1&destination=${event.owner?.latitude},${event.owner?.longitude}&travelmode=driving`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-lg transition flex items-center gap-2"
