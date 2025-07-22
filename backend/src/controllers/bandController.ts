@@ -1,5 +1,5 @@
 import { FastifyRequest, FastifyReply } from "fastify";
-import { fetchAllBands, fetchBandById, fetchMusicGenre, searchBandsByName } from "../models/bandModel";
+import { fetchAllBands, fetchBandById, fetchMusicGenre, searchBandsByName, fetchEventsByBandId } from "../models/bandModel";
 import { Band } from "../types/band";
 
 // GET /bands
@@ -50,4 +50,21 @@ export const getAllGenres = async (_req: FastifyRequest, reply: FastifyReply) =>
     }
 
     return reply.send(Array.from(genres));
+};
+
+export const getEventsByBandId = async (req: FastifyRequest, reply: FastifyReply) => {
+    const { id } = req.params as { id: string };
+
+    const { data, error } = await fetchEventsByBandId(id);
+    if (error) return reply.status(500).send({ error: error.message });
+    if (!data) return reply.send([]);
+
+    const band = data[0];
+    if (!band || !band.jouer) return reply.send([]);
+
+    const events = band.jouer
+        .map((j: any) => j.event)
+        .filter((e: any) => e != null);
+
+    return reply.send(events);
 };

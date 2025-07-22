@@ -1,49 +1,46 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import type { Band } from "../../types/band";
 import debounce from "lodash.debounce";
 
 type SearchBarBandProps = {
+    allBands: Band[];
     onResults: (bands: Band[]) => void;
+    onQueryChange?: (query: string) => void;
 };
 
-export default function SearchBarBand({ onResults }: SearchBarBandProps) {
+export default function SearchBarBand({ allBands, onResults, onQueryChange }: SearchBarBandProps) {
     const [query, setQuery] = useState("");
 
     useEffect(() => {
-        const fetchSuggestions = async () => {
-            const API_URL = import.meta.env.VITE_API_URL;
-
+        const filterBands = () => {
             if (query.length < 2) {
-                try {
-                    const res = await axios.get(`${API_URL}/bands`);
-                    onResults(res.data);
-                    return;
-                } catch (error) {
-                    console.error("Erreur chargement groupes :", error);
-                }
+                onResults(allBands);
+                return;
             }
 
-            try {
-                const { data } = await axios.get(`${API_URL}/bands/search?query=${query}`);
-                onResults(data);
-            } catch (error) {
-                console.error("Erreur recherche groupes :", error);
-            }
+            const filtered = allBands.filter(band => 
+                band.nom.toLowerCase().includes(query.toLowerCase()) ||
+                band.description?.toLowerCase().includes(query.toLowerCase()) ||
+                band.avoir?.some(a => 
+                    a.genre?.type_musique.toLowerCase().includes(query.toLowerCase())
+                )
+            );
+            
+            onResults(filtered);
         };
 
-        const delayedFetch = debounce(() => {
-            fetchSuggestions();
-        }, 100);
+        const delayedFilter = debounce(() => {
+            filterBands();
+            onQueryChange?.(query);
+        }, 300);
 
-        delayedFetch();
+        delayedFilter();
 
-        return () => delayedFetch.cancel();
-    }, [query, onResults]);
-
+        return () => delayedFilter.cancel();
+    }, [query, allBands, onResults, onQueryChange]);
 
     return (
-        <div className="relative w-full">
+        <div className="relative w-screen max-w-md">
             <input
                 type="text"
                 value={query}

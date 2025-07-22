@@ -84,3 +84,20 @@ export const fetchMusicGenre = async () => {
             )
         `);
 };
+
+export const fetchEventsByBandId = async (id_band: string) => {
+    return supabase
+        .from("band")
+        .select(`
+        jouer (
+            event (
+            id_event,
+            description,
+            titre,
+            image_url
+            )
+        )
+        `)
+        .eq("id_band", id_band);
+};
+
