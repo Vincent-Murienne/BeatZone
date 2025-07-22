@@ -4,7 +4,7 @@ import supabase from './supabaseClient';
 
 function Register() {
 
-    const [userType, setUserType] = useState<'artist' | 'user' | 'owner' | null>(null);
+    const [userType, setUserType] = useState<'artist' | 'user' | null>(null);
     const [step, setStep] = useState(1);
 
     // Étape 2 states
