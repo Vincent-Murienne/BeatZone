@@ -4,18 +4,34 @@ import supabase from './supabaseClient';
 
 function Register() {
 
-    const [userType, setUserType] = useState<'artist' | 'user' | null>(null);
+    const [userType, setUserType] = useState<'artist' | 'user' | 'owner' | null>(null);
     const [step, setStep] = useState(1);
 
     // Étape 2 states
     const [artistEmail, setArtistEmail] = useState('');
     const [artistPassword, setArtistPassword] = useState('');
-    const [artistGenre, setArtistGenre] = useState('');
-    const [artistName, setArtistName] = useState('');
+    const [artistMemberName, setArtistMemberName] = useState('');
+
     const [userPseudo, setUserPseudo] = useState('');
     const [userEmail, setUserEmail] = useState('');
     const [userPassword, setUserPassword] = useState('');
-    // const [userPassword2, setUserPassword2] = useState('');
+
+    const [ownerEmail, setOwnerEmail] = useState('');
+    const [ownerPassword, setOwnerPassword] = useState('');
+    const [ownerLastName, setOwnerLastName] = useState('');
+    const [ownerFirstName, setOwnerFistName] = useState('');
+
+    // Étape 3 states
+    const [artistNameBand, setArtistNameBand] = useState('');
+    const [artistMusic, setArtistMusic] = useState('');
+    const [artistVille, setArtisteville] = useState('');
+    const [artistPays, setArtistPays] = useState('');
+
+    const [ownerBusinessName, setOwnerBusinessName] = useState('');
+    const [ownerAddress, setOwnerAddress] = useState('');
+    const [ownerVille, setOwnerVille] = useState('');
+    const [ownerCp, setOwnerCp] = useState('');
+
 
 
     console.log('userType:', userType);
@@ -30,12 +46,13 @@ function Register() {
         if (userType === 'artist') {
             payload = {
                 type: 'artist',
+                pseudo: artistMemberName,
                 email: artistEmail,
                 password: artistPassword,
-                pseudo: artistName,
-                bio: null,
-                genre: artistGenre,
-                website: null,
+                bandName: artistNameBand,
+                music: artistMusic,
+                city: artistVille,
+                country: artistPays,
             };
         } else if (userType === 'user') {
             payload = {
@@ -44,7 +61,21 @@ function Register() {
                 email: userEmail,
                 password: userPassword,
             };
+        } else if (userType === 'owner') {
+
+            payload = {
+                type: 'owner',
+                pseudo: ownerFirstName + ' ' + ownerLastName,
+                email: ownerEmail,
+                password: ownerPassword,
+                businessName: ownerBusinessName,
+                address: ownerAddress,
+                city: ownerVille,
+                postalCode: ownerCp,
+            };
+
         } else {
+
             return; // Pas de type sélectionné
         }
 
@@ -142,6 +173,20 @@ function Register() {
                                             />
                                             Un utilisateur
                                         </label>
+                                        <label className={`w-full h-12 rounded-full flex items-center justify-center cursor-pointer transition-all duration-200 border-2 
+                                ${userType === 'owner'
+                                                ? 'bg-purple-100 text-black border-purple-800 shadow-[0_0_10px_2px_rgba(139,92,246,0.6)]'
+                                                : 'bg-gray-100 text-black border-transparent'}`}>
+                                            <input
+                                                type="radio"
+                                                name="userType"
+                                                value="owner"
+                                                className="hidden"
+                                                checked={userType === 'owner'}
+                                                onChange={() => setUserType('owner')}
+                                            />
+                                            Un organisateur
+                                        </label>
                                     </div>
 
                                     <button
@@ -162,16 +207,8 @@ function Register() {
                                             <input
                                                 type="text"
                                                 placeholder="Nom du groupe"
-                                                value={artistName}
-                                                onChange={(e) => setArtistName(e.target.value)}
-                                                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
-                                                required
-                                            />
-                                            <input
-                                                type="text"
-                                                placeholder="Genre musical"
-                                                value={artistGenre}
-                                                onChange={(e) => setArtistGenre(e.target.value)}
+                                                value={artistMemberName}
+                                                onChange={(e) => setArtistMemberName(e.target.value)}
                                                 className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
                                                 required
                                             />
@@ -194,7 +231,7 @@ function Register() {
                                                 required
                                             />
                                         </>
-                                    ) : (
+                                    ) : userType === 'user' ? (
                                         <>
                                             <input
                                                 type="text"
@@ -223,12 +260,164 @@ function Register() {
                                                 required
                                             />
                                         </>
-                                    )}
+                                    ) : userType === 'owner' ? (
+                                        <>
+                                            {/* À compléter pour owner */}
+                                            <div className="flex gap-4 mb-4">
+                                                <input
+                                                    type="text"
+                                                    placeholder="First Name"
+                                                    value={ownerFirstName}
+                                                    onChange={(e) => setOwnerFistName(e.target.value)}
+                                                    className="w-1/2 px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 text-black"
+                                                    required
+                                                />
+                                                <input
+                                                    type="text"
+                                                    placeholder="Last Name"
+                                                    value={ownerLastName}
+                                                    onChange={(e) => setOwnerLastName(e.target.value)}
+                                                    className="w-1/2 px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 text-black"
+                                                    required
+                                                />
+                                            </div>
+
+                                            <div className="mb-4">
+                                                <input
+                                                    type="email"
+                                                    placeholder="Email"
+                                                    value={ownerEmail}
+                                                    onChange={(e) => setOwnerEmail(e.target.value)}
+                                                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 text-black"
+                                                    autoComplete='new-email'
+                                                    required
+                                                />
+                                            </div>
+
+                                            <div className="mb-4">
+                                                <input
+                                                    type="password"
+                                                    placeholder="Password"
+                                                    value={ownerPassword}
+                                                    onChange={(e) => setOwnerPassword(e.target.value)}
+                                                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 text-black"
+                                                    autoComplete='new-password'
+                                                    required
+                                                />
+                                            </div>
+                                        </>
+
+                                    ) : null}
 
                                     <div className="flex justify-between mt-6">
                                         <button
                                             type="button"
                                             onClick={() => setStep(1)}
+                                            className="px-4 py-2 text-sm text-gray-600 hover:underline"
+                                        >
+                                            Retour
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => setStep(3)}
+                                            disabled={!userType}
+                                            className="py-3 px-6 bg-gradient-to-r from-purple-500 to-blue-500 text-white font-semibold rounded-xl hover:from-purple-600 hover:to-blue-600 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all"
+                                        >
+                                            Suivant
+                                        </button>
+                                    </div>
+                                </>
+                            )}
+                            {step === 3 && (
+                                <>
+                                    {userType === 'artist' ? (
+                                        <>
+                                            <div className="mb-4">
+                                                <textarea
+                                                    placeholder="Nom du groupe"
+                                                    value={artistNameBand}
+                                                    onChange={(e) => setArtistNameBand(e.target.value)}
+                                                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                                    rows={4}
+                                                    required
+                                                />
+                                            </div>
+                                            <div className="mb-4">
+                                                <input
+                                                    type="text"
+                                                    placeholder="Genre musical"
+                                                    value={artistMusic}
+                                                    onChange={(e) => setArtistMusic(e.target.value)}
+                                                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                                />
+                                            </div>
+                                            <div className="mb-4">
+                                                <input
+                                                    type="text"
+                                                    placeholder="Ville"
+                                                    value={artistVille}
+                                                    onChange={(e) => setArtisteville(e.target.value)}
+                                                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                                />
+                                            </div>
+                                            <div className="mb-4">
+                                                <input
+                                                    type="text"
+                                                    placeholder="Pays"
+                                                    value={artistPays}
+                                                    onChange={(e) => setArtistPays(e.target.value)}
+                                                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                                />
+                                            </div>
+
+                                            {/* Ajoute d'autres réseaux si besoin */}
+                                        </>
+                                    ) : userType === 'owner' ? (
+                                        <>
+                                            {/* À compléter selon ce que tu veux pour owner */}
+                                            <div className="mb-4">
+                                                <input
+                                                    type="text"
+                                                    placeholder="Nom de l'établissement"
+                                                    value={ownerBusinessName}
+                                                    onChange={(e) => setOwnerBusinessName(e.target.value)}
+                                                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                                />
+                                            </div>
+                                            <div className="mb-4">
+                                                <input
+                                                    type="text"
+                                                    placeholder="Adresse"
+                                                    value={ownerAddress}
+                                                    onChange={(e) => setOwnerAddress(e.target.value)}
+                                                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                                />
+                                            </div>
+                                            <div className="mb-4">
+                                                <input
+                                                    type="text"
+                                                    placeholder="Ville"
+                                                    value={ownerVille}
+                                                    onChange={(e) => setOwnerVille(e.target.value)}
+                                                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                                />
+                                            </div>
+                                            <div className="mb-4">
+                                                <input
+                                                    type="text"
+                                                    placeholder="Code postal"
+                                                    value={ownerCp}
+                                                    onChange={(e) => setOwnerCp(e.target.value)}
+                                                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                                />
+                                            </div>
+                                        </>
+                                    ) : null}
+
+                                    <div className="flex justify-between mt-6">
+                                        <button
+                                            type="button"
+                                            onClick={() => setStep(2)}
                                             className="px-4 py-2 text-sm text-gray-600 hover:underline"
                                         >
                                             Retour

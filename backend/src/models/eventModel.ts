@@ -103,10 +103,3 @@ export const fetchUniqueSuggestions = async () => {
         .not("id_owner.code_postal", "is", null)
         .or(`and(debut.lte.${now},fin.gte.${now}),debut.gte.${now}`);
 };
-
-export const fetchUniquePrices = async () => {
-    return supabase
-        .from("event")
-        .select("prix")
-        .not("prix", "is", null);
-};
