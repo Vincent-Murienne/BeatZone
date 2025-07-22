@@ -1,4 +1,3 @@
-// src/components/EventDetails.tsx
 import type { Event } from "../types/event";
 
 interface EventDetailsProps {
@@ -67,7 +66,7 @@ export default function EventDetails({
             <p className="text-gray-700 leading-relaxed">{event.description}</p>
 
             <div className="space-y-1 text-gray-700 text-sm mt-4">
-            <p><span className="font-semibold">📍 Adresse :</span> {event.adresse}, {event.code_postal} {event.ville}</p>
+            <p><span className="font-semibold">📍 Adresse :</span> {event.owner?.adresse}, {event.owner?.code_postal} {event.owner?.ville}</p>
             <p>
                 <span className="font-semibold">🗓️ Horaires :</span> Du{" "}
                 <span className="font-medium">{new Date(event.debut).toLocaleDateString()}</span> à{" "}
@@ -131,7 +130,7 @@ export default function EventDetails({
                 )}
 
                 <a
-                href={`https://www.google.com/maps/dir/?api=1&destination=${event.latitude},${event.longitude}&travelmode=driving`}
+                href={`https://www.google.com/maps/dir/?api=1&destination=${event.owner?.latitude},${event.owner?.longitude}&travelmode=driving`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-lg transition flex items-center gap-2"

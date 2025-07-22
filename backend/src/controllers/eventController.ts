@@ -70,11 +70,15 @@ export const getAllSuggestions = async (_req: FastifyRequest, reply: FastifyRepl
 
     const seen = new Set<string>();
     const suggestions = data
-        .map(({ adresse, code_postal, ville }) => `${adresse}, ${code_postal}, ${ville}`)
+        .map((event) => {
+            const owner = Array.isArray(event.id_owner) ? event.id_owner[0] || {} : event.id_owner || {};
+            const { adresse, code_postal, ville } = owner;
+            return `${adresse}, ${code_postal}, ${ville}`;
+        })
         .filter((s) => {
-        if (seen.has(s)) return false;
-        seen.add(s);
-        return true;
+            if (seen.has(s)) return false;
+            seen.add(s);
+            return true;
         });
 
     return reply.send(suggestions);

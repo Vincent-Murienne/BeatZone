@@ -52,6 +52,19 @@ export const fetchBandById = async (id_band: string) => {
         .single();
 };
 
+export const fetchUserBand = async (userId: string) => {
+    return supabase
+        .from("band")
+        .select(`*,
+            avoir(
+                genre(
+                    type_musique
+                )
+            )`)
+        .eq("id_user", userId)
+        .single();
+}
+
 export const searchBandsByName = async (query: string) => {
     return supabase
         .from("band")
