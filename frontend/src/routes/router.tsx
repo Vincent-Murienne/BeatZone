@@ -7,6 +7,7 @@ import LandingPage from '../pages/LandingPage'
 import MapPage from '../pages/MapPage'
 import EventDetailsPage from '../pages/EventDetailsPage'
 import ProtectedRoute from '../auth/guards/ProtectedRoute'
+import ProfilePage from '../pages/ProfilePage'
 
 function AppRouter() {
     return (
@@ -41,6 +42,13 @@ function AppRouter() {
                         <BandDetailsPage />
                     </ProtectedRoute>
                 } />
+                <Route path="/profile" element={
+                    <ProtectedRoute>
+                        <ProfilePage />
+                    </ProtectedRoute>
+                } />
+
+                {/* Add more routes as needed */}
             </Routes>
         </BrowserRouter>
     )
