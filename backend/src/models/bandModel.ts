@@ -64,3 +64,40 @@ export const fetchUserBand = async (userId: string) => {
         .eq("id_user", userId)
         .single();
 }
+
+export const searchBandsByName = async (query: string) => {
+    return supabase
+        .from("band")
+        .select("id_band, nom")
+        .ilike("nom", `%${query}%`)
+        .limit(10);
+};
+
+export const fetchMusicGenre = async () => {
+    return supabase
+        .from("band")
+        .select(`
+            avoir (
+                genre (
+                    type_musique
+                )
+            )
+        `);
+};
+
+export const fetchEventsByBandId = async (id_band: string) => {
+    return supabase
+        .from("band")
+        .select(`
+        jouer (
+            event (
+            id_event,
+            description,
+            titre,
+            image_url
+            )
+        )
+        `)
+        .eq("id_band", id_band);
+};
+
