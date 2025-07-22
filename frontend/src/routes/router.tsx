@@ -7,6 +7,8 @@ import LandingPage from '../pages/LandingPage'
 import MapPage from '../pages/MapPage'
 import EventDetailsPage from '../pages/EventDetailsPage'
 import ProtectedRoute from '../auth/guards/ProtectedRoute'
+import ArtistDashboardPage from '../pages/ArtistDashboardPage'
+import ArtistRoute from '../auth/guards/ArtistRoute'
 
 function AppRouter() {
     return (
@@ -40,6 +42,11 @@ function AppRouter() {
                     <ProtectedRoute>
                         <BandDetailsPage />
                     </ProtectedRoute>
+                } />
+                <Route path="/artist-dashboard" element={
+                    <ArtistRoute>
+                        <ArtistDashboardPage />
+                    </ArtistRoute>
                 } />
             </Routes>
         </BrowserRouter>

@@ -1,7 +1,7 @@
 import { createContext, useState, useEffect } from "react";
 import type { ReactNode } from "react";
 import type { User, AuthContextType } from "./types";
-import { login as loginService, logout as logoutService, onAuthStateChange } from "../services/authService";
+import { login as loginService, logout as logoutService, onAuthStateChange, getUserById as getUserByIdService } from "../services/authService";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -31,6 +31,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     } catch {
       return null;
     }
+  };
+
+  const getUserById = async (id: string) => {
+    const response = await getUserByIdService(id);
+    return response;
   };
 
   useEffect(() => {
@@ -89,7 +94,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout, saveUserToStorage }}>
+    <AuthContext.Provider value={{ user, loading, login, logout, saveUserToStorage, getUserById }}>
       {children}
     </AuthContext.Provider>
   );
