@@ -1,5 +1,10 @@
 // src/components/EventDetails.tsx
 import type { Event } from "../types/event";
+import { addToFavorites } from "../services/favoriteService";
+import  supabase  from "../register/supabaseClient";
+import React, { useState, useEffect } from "react";
+
+
 
 interface EventDetailsProps {
     event: Event;
@@ -50,6 +55,20 @@ export default function EventDetails({
     showViewMoreButton = true,
 }: EventDetailsProps) {
     const status = getEventStatus(event);
+    const [userId, setUserId] = useState<string | null>(null);
+
+useEffect(() => {
+  const fetchUser = async () => {
+    const { data, error } = await supabase.auth.getUser();
+    if (data?.user) {
+      setUserId(data.user.id);
+    } else {
+      setUserId(null);
+    }
+  };
+
+  fetchUser();
+}, []);
 
     return (
         <>
@@ -115,10 +134,20 @@ export default function EventDetails({
             {showActions && (
             <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-3 space-y-2 sm:space-y-0 mt-4">
                 <a
-                onClick={() => alert("Vous êtes intéressé par cet événement !")}
-                className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition flex items-center gap-2 cursor-pointer"
-                >
-                💖 Je suis intéressé
+                    onClick={() => {
+                        const bandId = event.jouer?.[0]?.band?.id_band;
+                        if (!bandId) {
+                        console.error("Aucun groupe trouvé pour cet événement");
+                        return;
+                        }
+
+                        addToFavorites(userId, bandId)
+                        .then(() => alert("Ajouté aux favoris !"))
+                        .catch((err) => alert("Erreur : " + err?.response?.data?.error || err.message));
+                    }}
+                    className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition flex items-center gap-2 cursor-pointer"
+                    >
+                    💖 Je suis intéressé
                 </a>
 
                 {showViewMoreButton && (
