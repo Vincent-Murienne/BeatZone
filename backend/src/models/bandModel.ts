@@ -51,3 +51,23 @@ export const fetchBandById = async (id_band: string) => {
         .eq("id_band", id_band)
         .single();
 };
+
+export const searchBandsByName = async (query: string) => {
+    return supabase
+        .from("band")
+        .select("id_band, nom")
+        .ilike("nom", `%${query}%`)
+        .limit(10);
+};
+
+export const fetchMusicGenre = async () => {
+    return supabase
+        .from("band")
+        .select(`
+            avoir (
+                genre (
+                    type_musique
+                )
+            )
+        `);
+};

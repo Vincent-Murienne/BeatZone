@@ -79,10 +79,3 @@ export const fetchUniqueSuggestions = async () => {
         .neq("ville", "")
         .or(`and(debut.lte.${now},fin.gte.${now}),debut.gte.${now}`);
 };
-
-export const fetchUniquePrices = async () => {
-    return supabase
-        .from("event")
-        .select("prix")
-        .not("prix", "is", null);
-};
