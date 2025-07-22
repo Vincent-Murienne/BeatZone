@@ -75,8 +75,8 @@ export default function MapPage() {
             const searchOk =
             searchTerms.length === 0 ||
             searchTerms.some(term =>
-                event.ville.toLowerCase().includes(term) ||
-                event.adresse.toLowerCase().includes(term)
+                event.owner?.ville.toLowerCase().includes(term) ||
+                event.owner?.adresse.toLowerCase().includes(term)
             );
 
             return dateOk && genreOk && prixOk && searchOk;
@@ -107,36 +107,47 @@ export default function MapPage() {
 
         // Recherche dans les événements chargés
         const matchedEvent = events.find((event) => {
-            const exactAddressMatch = suggestionParts[0] && event.adresse.toLowerCase() === suggestionParts[0];
+            const exactAddressMatch = suggestionParts[0] && event.owner?.adresse.toLowerCase() === suggestionParts[0];
             const exactCityMatch =
-            suggestionParts.length > 1 && event.ville.toLowerCase() === suggestionParts[suggestionParts.length - 1];
+            suggestionParts.length > 1 && event.owner?.ville.toLowerCase() === suggestionParts[suggestionParts.length - 1];
             return exactAddressMatch && exactCityMatch;
         });
 
-        if (matchedEvent) {
+        if (
+            matchedEvent &&
+            typeof matchedEvent.owner?.longitude === "number" &&
+            typeof matchedEvent.owner?.latitude === "number"
+        ) {
             setViewState((prev) => ({
-            ...prev,
-            longitude: matchedEvent.longitude,
-            latitude: matchedEvent.latitude,
-            zoom: 15,
+                ...prev,
+                longitude: matchedEvent.owner.longitude,
+                latitude: matchedEvent.owner.latitude,
+                zoom: 15,
             }));
         } else {
             // Sinon, recentrer sur la ville (dernier élément de la suggestion)
             const cityName = suggestion.place_name.split(",").pop()?.trim().toLowerCase() || "";
-            const eventsInCity = events.filter((event) => event.ville.toLowerCase().includes(cityName));
+            const eventsInCity = events.filter((event) => event.owner?.ville.toLowerCase().includes(cityName));
 
             if (eventsInCity.length > 0) {
-            const avgLat =
-                eventsInCity.reduce((sum, event) => sum + event.latitude, 0) / eventsInCity.length;
-            const avgLng =
-                eventsInCity.reduce((sum, event) => sum + event.longitude, 0) / eventsInCity.length;
+                const validEvents = eventsInCity.filter(
+                    event =>
+                        typeof event.owner?.latitude === "number" &&
+                        typeof event.owner?.longitude === "number"
+                );
+                if (validEvents.length > 0) {
+                    const avgLat =
+                        validEvents.reduce((sum, event) => sum + (event.owner!.latitude as number), 0) / validEvents.length;
+                    const avgLng =
+                        validEvents.reduce((sum, event) => sum + (event.owner!.longitude as number), 0) / validEvents.length;
 
-            setViewState((prev) => ({
-                ...prev,
-                longitude: avgLng,
-                latitude: avgLat,
-                zoom: 13,
-            }));
+                    setViewState((prev) => ({
+                        ...prev,
+                        longitude: avgLng,
+                        latitude: avgLat,
+                        zoom: 13,
+                    }));
+                }
             }
         }
     }

@@ -1,4 +1,5 @@
 import type { Band } from "./band";
+import type { Owner } from "./owner";
 
 export interface Event {
   id_event: number;
@@ -6,18 +7,17 @@ export interface Event {
   description: string;
   debut: string;
   fin: string;
-  latitude: number;
-  longitude: number;
-  adresse: string;
-  code_postal: number;
-  ville: string;
   prix: number;
   cree_le: string;
   image_url: string;
   infos_complementaires: string;
+  id_owner: string;
+
   jouer?: {
     band: Band;
     debut_passage: string | null;
     fin_passage: string | null;
   }[];
+
+  owner?: Owner;
 }
