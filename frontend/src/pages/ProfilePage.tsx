@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import type { Users } from '../types/users';
-import type { Band, BandWithGenre } from '../types/band';
+import type { Band } from '../types/band';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 function ProfilePage() {
     const [user, setUser] = useState<Users | null>(null);
-    const [band, setBand] = useState<BandWithGenre | null>(null);
+    const [band, setBand] = useState<Band | null>(null);
 
     const [activeTab, setActiveTab] = useState<'personal' | 'artist'>('personal');
 
@@ -176,7 +176,7 @@ function ProfilePage() {
                                         <label className="block text-sm font-medium text-gray-600">Genre musical</label>
                                         <input
                                             type="text"
-                                            value={band?.avoir?.map(item => item.genre.type_musique).join(', ') ?? ''}
+                                            value={band?.avoir?.map(a => a.genre.type_musique).join(', ') ?? ''}
                                             className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-500 cursor-not-allowed"
                                             disabled
                                         />
