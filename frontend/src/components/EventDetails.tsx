@@ -15,6 +15,19 @@ function formatHour(date: Date): string {
     return minutes === 0 ? `${hours}h` : `${hours}h${minutes.toString().padStart(2, '0')}`;
 }
 
+function extractGenresFromEvent(event: Event): string[] {
+    const genres = new Set<string>();
+
+    event.jouer?.forEach((passage) => {
+        passage.band?.avoir?.forEach((a) => {
+            const genre = a.genre?.type_musique;
+            if (genre) genres.add(genre);
+        });
+    });
+
+    return Array.from(genres);
+}
+
 const getEventStatus = (event: Event): { label: string; emoji: string } | null => {
     const now = new Date();
     const debut = new Date(event.debut);
@@ -63,7 +76,10 @@ export default function EventDetails({
                 <span className="font-medium">{new Date(event.fin).toLocaleDateString()}</span> à{" "}
                 <span className="font-medium">{formatHour(new Date(event.fin))}</span>
             </p>
-            <p><span className="font-semibold">🎭 Genre :</span> {event.genre}</p>
+            <p>
+                <span className="font-semibold">🎭 Genre :</span>{" "}
+                {extractGenresFromEvent(event).join(", ") || "Non spécifié"}
+            </p>
             <p>
                 <span className="font-semibold">💸 Entrée :</span>{" "}
                 {event.prix > 0 ? `${event.prix} €` : <span className="text-green-600 font-semibold">Gratuit</span>}
