@@ -8,7 +8,10 @@ import LandingPage from '../pages/LandingPage'
 import MapPage from '../pages/MapPage'
 import EventDetailsPage from '../pages/EventDetailsPage'
 import ProtectedRoute from '../auth/guards/ProtectedRoute'
+import ArtistDashboardPage from '../pages/ArtistDashboardPage'
+import ArtistRoute from '../auth/guards/ArtistRoute'
 import ProfilePage from '../pages/ProfilePage'
+import MainNavbar from '../components/Navbar/MainNavbar'
 
 function AppRouter() {
     return (
@@ -30,27 +33,50 @@ function AppRouter() {
                 } />
                 <Route path="/map" element={
                     <ProtectedRoute>
-                        <MapPage />
+                        <>
+                            <MainNavbar />
+                            <MapPage />
+                        </>
                     </ProtectedRoute>
                 } />
                 <Route path="/event/:id" element={
                     <ProtectedRoute>
-                        <EventDetailsPage />
+                        <>
+                            <MainNavbar />
+                            <EventDetailsPage />
+                        </>
                     </ProtectedRoute>
                 } />
-                <Route path="/list-band" element={
+                <Route path="/bands" element={
                     <ProtectedRoute>
-                        <ListBandPage />
+                        <>
+                            <MainNavbar />
+                            <ListBandPage />
+                        </>
                     </ProtectedRoute>
                 } />
                 <Route path="/band/:id" element={
                     <ProtectedRoute>
-                        <BandDetailsPage />
+                        <>
+                            <MainNavbar />
+                            <BandDetailsPage />
+                        </>
                     </ProtectedRoute>
+                } />
+                <Route path="/artist-dashboard" element={
+                    <ArtistRoute>
+                        <>
+                            <MainNavbar />
+                            <ArtistDashboardPage />
+                        </>
+                    </ArtistRoute>
                 } />
                 <Route path="/profile" element={
                     <ProtectedRoute>
-                        <ProfilePage />
+                        <>
+                            <MainNavbar />
+                            <ProfilePage />
+                        </>
                     </ProtectedRoute>
                 } />
 

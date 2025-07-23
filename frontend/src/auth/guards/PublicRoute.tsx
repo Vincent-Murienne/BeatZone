@@ -7,9 +7,13 @@ interface PublicRouteProps {
   redirectTo?: string;
 }
 
-const PublicRoute = ({ children, redirectTo = "/" }: PublicRouteProps) => {
-  const { user } = useAuth();
+const PublicRoute = ({ children, redirectTo = "/map" }: PublicRouteProps) => {
+  const { user, loading } = useAuth();
 
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+  
   if (user) {
     return <Navigate to={redirectTo} replace />;
   }
