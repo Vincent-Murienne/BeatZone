@@ -9,6 +9,7 @@ function ProfilePage() {
     const [user, setUser] = useState<Users | null>(null);
     const [band, setBand] = useState<Band | null>(null);
     const [favorites, setFavorites] = useState<Band[]>([]);
+    const [eventFavorites, setEventFavorites] = useState<any[]>([]);
     const navigate = useNavigate();
 
     const [activeTab, setActiveTab] = useState<'personal' | 'artist' | 'favorites'>('personal');
@@ -77,7 +78,23 @@ function ProfilePage() {
             console.error('Erreur fetchFavorites :', error);
         }
         };
-
+        const fetchEventFavorites = async (userId: string) => {
+    try {
+        const response = await fetch(`${API_URL}/favorites-event/${userId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+        if (!response.ok) {
+            throw new Error('Erreur lors de la récupération des événements favoris');
+        }
+        const data = await response.json();
+        setEventFavorites(data);
+    } catch (error) {
+        console.error('Erreur fetchEventFavorites :', error);
+    }
+};
     useEffect(() => {
         const userId: any = localStorage.getItem('beatzone_user');
 
@@ -86,6 +103,8 @@ function ProfilePage() {
             fetchUserInfo(userlocal.id);
             FetchUserBand(userlocal.id);
             fetchFavorites(userlocal.id);
+            fetchEventFavorites(userlocal.id);
+
         }
     }, []);
 
@@ -141,7 +160,13 @@ function ProfilePage() {
                             className={`px-4 py-2 rounded-t-lg font-medium ${activeTab === 'favorites' ? 'bg-white text-blue-600 border-b-2 border-blue-600' : 'text-gray-500'
                                 }`}
                             >
-                            Favoris
+                             Groupe Favoris
+                            </button>
+                            <button
+                                onClick={() => setActiveTab('eventFavorites')}
+                                className={`px-4 py-2 rounded-t-lg font-medium ${activeTab === 'eventFavorites' ? 'bg-white text-pink-600 border-b-2 border-pink-600' : 'text-gray-500'}`}
+                            >
+                                Event Favoris
                             </button>
                         </div>
                     )}
@@ -248,7 +273,29 @@ function ProfilePage() {
                             )}
                         </div>
                         )}
-
+                        {activeTab === 'eventFavorites' && (
+                            <div className="space-y-4">
+                                <h2 className="text-2xl font-semibold text-gray-800 border-b-2 border-pink-200 pb-2">
+                                    Mes événements favoris 💖
+                                </h2>
+                                {(eventFavorites?.length ?? 0) === 0 ? (
+                                    <p className="text-gray-600">Aucun événement favori pour l’instant.</p>
+                                ) : (
+                                    <ul className="space-y-2">
+                                        {eventFavorites.map((event) => (
+                                            <li
+                                                key={event.id_event}
+                                                className="bg-gray-100 p-4 rounded-lg shadow-sm cursor-pointer hover:bg-gray-200"
+                                                onClick={() => navigate(`/event/${event.id_event}`)}
+                                            >
+                                                <p className="font-semibold">{event.titre}</p>
+                                                <p className="text-sm text-gray-600">{event.lieu} — {event.debut}</p>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
