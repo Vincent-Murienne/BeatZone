@@ -1,6 +1,7 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import MapScreen from '../screens/MapScreen';
 import EventDetailsScreen from '../screens/EventDetailsScreen';
+import RegisterScreen from '../screens/RegisterScreen';
 
 export type RootStackParamList = {
     Login: undefined;
@@ -16,12 +17,12 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function AppNavigator() {
     return (
-        <Stack.Navigator initialRouteName="Map">
-        <Stack.Screen name="Map" component={MapScreen} />
-        <Stack.Screen name="EventDetails" component={EventDetailsScreen} />
-        {/* <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="Register" component={RegisterScreen} />
-        <Stack.Screen name="Map" component={MapScreen} />
+        <Stack.Navigator initialRouteName="Register">
+            <Stack.Screen name="Map" component={MapScreen} />
+            <Stack.Screen name="EventDetails" component={EventDetailsScreen} />
+            <Stack.Screen name="Register" component={RegisterScreen} />
+            {/* <Stack.Screen name="Map" component={MapScreen} />
+            <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="EventDetails" component={EventDetailsScreen} />
         <Stack.Screen name="ListBand" component={ListBandScreen} />
         <Stack.Screen name="BandDetails" component={BandDetailsScreen} />
