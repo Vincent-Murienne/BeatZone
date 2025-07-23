@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { addBandToFavorites, removeBandFromFavorites } from "../services/favoriteService";
 import type { Band } from "../types/band";
 import type { Event } from "../types/event";
 import EventCard from "../components/EventCard";
@@ -20,8 +21,57 @@ export default function BandDetailsPage() {
     const [events, setEvents] = useState<Event[]>([]);
     const [loadingBand, setLoadingBand] = useState(true);
     const [loadingEvents, setLoadingEvents] = useState(true);
+    const [isFavorite, setIsFavorite] = useState(false);
+    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
+    const handleAddFavorite = async () => {
+        const userRaw = localStorage.getItem("beatzone_user");
+        if (!userRaw) {
+            alert("Vous devez être connecté pour ajouter un favori.");
+            return;
+        }
+        let userId;
+        try {
+            userId = JSON.parse(userRaw).id;
+        } catch {
+            alert("Utilisateur invalide.");
+            return;
+        }
+        try {
+            await addBandToFavorites(userId, band.id_band);
+            setIsFavorite(true);
+            alert("Groupe ajouté aux favoris !");
+        } catch (err: any) {
+            if (err.message?.includes("duplicate key") || err.message?.includes("Déjà en favori")) {
+                setIsFavorite(true);
+                alert("Ce groupe est déjà dans vos favoris.");
+            } else {
+                alert("Erreur : " + (err.message || "Impossible d'ajouter le favori"));
+            }
+        }
+    };
+    const handleRemoveFavorite = async () => {
+        const userRaw = localStorage.getItem("beatzone_user");
+        if (!userRaw) {
+            alert("Vous devez être connecté pour supprimer un favori.");
+            return;
+        }
+        let userId;
+        try {
+            userId = JSON.parse(userRaw).id;
+        } catch {
+            alert("Utilisateur invalide.");
+            return;
+        }
+        try {
+            await removeBandFromFavorites(userId, band.id_band);
+            setIsFavorite(false);
+            alert("Groupe retiré des favoris !");
+        } catch (err: any) {
+            alert("Erreur : " + (err.message || "Impossible de retirer le favori"));
+        }
+    };
     useEffect(() => {
         const API_URL = import.meta.env.VITE_API_URL;
 
@@ -51,6 +101,25 @@ export default function BandDetailsPage() {
         fetchEvents();
     }, [id]);
 
+    useEffect(() => {
+    if (!band) return;
+    const userRaw = localStorage.getItem("beatzone_user");
+    if (!userRaw) return;
+    let userId;
+    try {
+        userId = JSON.parse(userRaw).id;
+    } catch {
+        return;
+    }
+    // Vérifie si le groupe est déjà en favori
+    fetch(`${import.meta.env.VITE_API_URL}/favorites/${userId}`)
+        .then(res => res.json())
+        .then(data => {
+            const found = data.some((b: any) => b.id_band === band.id_band);
+            setIsFavorite(found);
+        });
+}, [band]);
+
     if (loadingBand) return <p>Chargement du groupe...</p>;
     if (!band) return <p>Groupe introuvable.</p>;
 
@@ -69,7 +138,23 @@ export default function BandDetailsPage() {
             </button>
         </div>
         <h1 className="text-3xl font-bold mb-4">{band.nom}</h1>
-
+        <div className="mb-4">
+            {isFavorite ? (
+                <button
+                    onClick={handleRemoveFavorite}
+                    className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition"
+                >
+                    ❌ Retirer des favoris
+                </button>
+            ) : (
+                <button
+                    onClick={handleAddFavorite}
+                    className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition"
+                >
+                    💖 Ajouter aux favoris
+                </button>
+            )}
+        </div>
         <img
             src={band.image_url}
             alt={band.nom}
@@ -152,9 +237,10 @@ export default function BandDetailsPage() {
                 </li>
                 ))}
             </ul>
+            
             </div>
         )}
-
+        
         {/* Réseaux sociaux */}
         {socialLinks && (
             <div className="mb-8">

@@ -1,4 +1,7 @@
 import type { Event } from "../types/event";
+import { addEventToFavorites, removeEventFromFavorites } from "../services/favoriteService";
+import { useEffect, useState } from "react";
+
 
 interface EventDetailsProps {
     event: Event;
@@ -49,7 +52,73 @@ export default function EventDetails({
     showViewMoreButton = true,
 }: EventDetailsProps) {
     const status = getEventStatus(event);
+    const [isFavorite, setIsFavorite] = useState(false);
 
+    useEffect(() => {
+        const userRaw = localStorage.getItem("beatzone_user");
+        if (!userRaw) return;
+        let userId;
+        try {
+            userId = JSON.parse(userRaw).id;
+        } catch {
+            return;
+        }
+        fetch(`${import.meta.env.VITE_API_URL}/favorites-event/${userId}`)
+            .then(res => res.json())
+            .then(data => {
+                const found = data.some((ev: any) => ev.id_event === event.id_event);
+                setIsFavorite(found);
+            });
+    }, [event.id_event]);
+
+    const handleAddFavorite = async () => {
+        const userRaw = localStorage.getItem("beatzone_user");
+        if (!userRaw) {
+            alert("Vous devez être connecté pour ajouter un favori.");
+            return;
+        }
+        let userId;
+        try {
+            userId = JSON.parse(userRaw).id;
+        } catch {
+            alert("Utilisateur invalide.");
+            return;
+        }
+        try {
+            await addEventToFavorites(userId, event.id_event);
+            setIsFavorite(true);
+            alert("Événement ajouté aux favoris !");
+        } catch (err: any) {
+            if (err.message?.includes("duplicate key") || err.message?.includes("Déjà en favori")) {
+                setIsFavorite(true);
+                alert("Vous avez déjà ajouté cet événement en favori.");
+            } else {
+                alert("Erreur : " + (err.message || "Impossible d'ajouter le favori"));
+            }
+        }
+    };
+
+    const handleRemoveFavorite = async () => {
+        const userRaw = localStorage.getItem("beatzone_user");
+        if (!userRaw) {
+            alert("Vous devez être connecté.");
+            return;
+        }
+        let userId;
+        try {
+            userId = JSON.parse(userRaw).id;
+        } catch {
+            alert("Utilisateur invalide.");
+            return;
+        }
+        try {
+            await removeEventFromFavorites(userId, event.id_event);
+            setIsFavorite(false);
+            alert("Événement retiré des favoris !");
+        } catch (err: any) {
+            alert("Erreur : " + (err.message || "Impossible de retirer le favori"));
+        }
+    };
     return (
         <>
         <img src={event.image_url} alt={event.titre} className="w-full h-60 object-cover" />
@@ -113,13 +182,21 @@ export default function EventDetails({
 
             {showActions && (
             <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-3 space-y-2 sm:space-y-0 mt-4">
+                {isFavorite ? (
+                    <a
+                        onClick={handleRemoveFavorite}
+                        className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition flex items-center gap-2 cursor-pointer"
+                    >
+                        ❌ Retirer des favoris
+                    </a>
+                ) : ( 
                 <a
-                onClick={() => alert("Vous êtes intéressé par cet événement !")}
-                className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition flex items-center gap-2 cursor-pointer"
+                    onClick={handleAddFavorite}
+                    className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition flex items-center gap-2 cursor-pointer"
                 >
-                💖 Je suis intéressé
+                    💖 Je suis intéressé
                 </a>
-
+                )}
                 {showViewMoreButton && (
                     <a
                         href={`/event/${event.id_event}`}

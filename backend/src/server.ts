@@ -6,7 +6,9 @@ import loginRoutes from './login'
 import eventRoute from "./routes/eventRoute";
 import bandRoute from "./routes/bandRoute";
 import userRoutes from './routes/usersRoute';
-import ownerRoutes from './routes/ownerRoute';
+import favoriteRoutes from './routes/favoriteRoute';
+import favoriteEventRoutes from "./routes/favoriteEventRoute";
+
 
 const app = Fastify()
 app.register(cors, {
@@ -39,6 +41,7 @@ app.listen({
 app.register(eventRoute, { prefix: "/api" });
 app.register(bandRoute, { prefix: "/api" });
 app.register(userRoutes, { prefix: "/api" });
-app.register(ownerRoutes, { prefix: "/api" });
+app.register(favoriteRoutes, { prefix: "/api" });
+app.register(favoriteEventRoutes, { prefix: "/api" });
 
 export default app;
