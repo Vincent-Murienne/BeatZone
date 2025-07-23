@@ -13,4 +13,5 @@ export type AuthContextType = {
   login: (email: string, password: string) => Promise<any>;
   logout: () => Promise<void>;
   saveUserToStorage: (userData: User | null) => void;
+  getUserById: (id: string) => Promise<User | null>;
 }; 

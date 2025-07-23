@@ -3,6 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { addBandToFavorites, removeBandFromFavorites } from "../services/favoriteService";
 import type { Band } from "../types/band";
+import type { Event } from "../types/event";
+import EventCard from "../components/EventCard";
 import {
     FaSpotify,
     FaDeezer,
@@ -10,12 +12,15 @@ import {
     FaInstagram,
     FaFacebook,
     FaTiktok,
-    FaGlobe
+    FaGlobe,
 } from "react-icons/fa";
 
 export default function BandDetailsPage() {
     const { id } = useParams<{ id: string }>();
     const [band, setBand] = useState<Band | null>(null);
+    const [events, setEvents] = useState<Event[]>([]);
+    const [loadingBand, setLoadingBand] = useState(true);
+    const [loadingEvents, setLoadingEvents] = useState(true);
     const [isFavorite, setIsFavorite] = useState(false);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
@@ -68,19 +73,32 @@ export default function BandDetailsPage() {
         }
     };
     useEffect(() => {
+        const API_URL = import.meta.env.VITE_API_URL;
+
         const fetchBand = async () => {
-            const API_URL = import.meta.env.VITE_API_URL;
         try {
-                    const res = await axios.get(`${API_URL}/band/${id}`);
+            const res = await axios.get(`${API_URL}/band/${id}`);
             setBand(res.data);
         } catch (error) {
             console.error("Erreur lors du chargement du groupe :", error);
         } finally {
-            setLoading(false);
+            setLoadingBand(false);
+        }
+        };
+
+        const fetchEvents = async () => {
+        try {
+            const res = await axios.get(`${API_URL}/band/${id}/events`);
+            setEvents(res.data);
+        } catch (error) {
+            console.error("Erreur lors du chargement des événements :", error);
+        } finally {
+            setLoadingEvents(false);
         }
         };
 
         fetchBand();
+        fetchEvents();
     }, [id]);
 
     useEffect(() => {
@@ -102,19 +120,21 @@ export default function BandDetailsPage() {
         });
 }, [band]);
 
-    if (loading) return <p>Chargement...</p>;
+    if (loadingBand) return <p>Chargement du groupe...</p>;
     if (!band) return <p>Groupe introuvable.</p>;
 
-    const socialLinks = band.band_socials?.[0];
+    if (loadingEvents) return <p>Chargement des événements...</p>;
+
+    const socialLinks = band.band_socials;
 
     return (
         <div className="max-w-4xl mx-auto px-4 py-8">
         <div className="p-4 flex justify-start">
             <button
-                onClick={() => navigate("/map")}
-                className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition"
+            onClick={() => navigate("/map")}
+            className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition"
             >
-                Retour à la liste
+            Retour à la liste
             </button>
         </div>
         <h1 className="text-3xl font-bold mb-4">{band.nom}</h1>
@@ -174,11 +194,11 @@ export default function BandDetailsPage() {
         </div>
 
         {/* Membres */}
-        {band.member && band.member.length > 0 && (
+        {band.membres && band.membres.length > 0 && (
             <div className="mb-8">
             <h2 className="text-lg font-semibold mb-2">Membres du groupe :</h2>
             <ul className="space-y-4">
-                {band.member.map((membre) => (
+                {band.membres.map((membre) => (
                 <li
                     key={membre.id_member}
                     className="p-4 border rounded-lg shadow-sm bg-white"
@@ -227,7 +247,11 @@ export default function BandDetailsPage() {
             <h2 className="text-lg font-semibold mb-2">Réseaux sociaux :</h2>
             <div className="flex flex-wrap gap-4 text-2xl text-blue-600">
                 {socialLinks.spotify_url && (
-                <a href={socialLinks.spotify_url} target="_blank" rel="noreferrer">
+                <a
+                    href={socialLinks.spotify_url}
+                    target="_blank"
+                    rel="noreferrer"
+                >
                     <FaSpotify />
                 </a>
                 )}
@@ -242,7 +266,11 @@ export default function BandDetailsPage() {
                 </a>
                 )}
                 {socialLinks.instagram_url && (
-                <a href={socialLinks.instagram_url} target="_blank" rel="noreferrer">
+                <a
+                    href={socialLinks.instagram_url}
+                    target="_blank"
+                    rel="noreferrer"
+                >
                     <FaInstagram />
                 </a>
                 )}
@@ -264,6 +292,8 @@ export default function BandDetailsPage() {
             </div>
             </div>
         )}
+
+        <EventCard events={events} />
         </div>
     );
 }

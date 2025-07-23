@@ -5,7 +5,6 @@ import {
     fetchEventById,
     fetchUniqueGenres,
     fetchUniqueSuggestions,
-    fetchUniquePrices,
 } from "../models/eventModel";
 
 // GET /events
@@ -61,18 +60,6 @@ export const getAllGenres = async (_req: FastifyRequest, reply: FastifyReply) =>
     }
 
     return reply.send(Array.from(genres));
-};
-
-// GET /events/prices
-export const getAllPrices = async (_req: FastifyRequest, reply: FastifyReply) => {
-    const { data, error } = await fetchUniquePrices();
-    if (error) return reply.status(500).send({ error: error.message });
-
-    const uniquePrices = Array.from(
-        new Set(data.map(({ prix }) => prix).filter((p) => typeof p === "number" && !isNaN(p)))
-    );
-
-    return reply.send(uniquePrices);
 };
 
 // GET /events/suggestions
