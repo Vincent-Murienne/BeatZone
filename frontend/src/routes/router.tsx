@@ -8,6 +8,7 @@ import MapPage from '../pages/MapPage'
 import EventDetailsPage from '../pages/EventDetailsPage'
 import ProtectedRoute from '../auth/guards/ProtectedRoute'
 import ProfilePage from '../pages/ProfilePage'
+import AuthCallback from '../auth/callback'
 
 function AppRouter() {
     return (
@@ -23,7 +24,7 @@ function AppRouter() {
                         <LoginPage />
                     </PublicRoute>
                 } />
-                {/* <Route path="/auth/callback" element={<AuthCallback />} /> */}
+                <Route path="/auth/callback" element={<AuthCallback />} />
                 <Route path="/" element={
                     <LandingPage />
                 } />
