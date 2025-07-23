@@ -1,7 +1,8 @@
 import { FastifyInstance, FastifyPluginOptions } from 'fastify'
 import { supabase } from './db'
+import { log } from 'console';
 
-async function loginRoutes(app: FastifyInstance, options: FastifyPluginOptions) {
+export async function loginRoutes(app: FastifyInstance, options: FastifyPluginOptions) {
     app.post('/api/login', async (request, reply) => {
         const body = request.body as any;
 
@@ -39,4 +40,19 @@ async function loginRoutes(app: FastifyInstance, options: FastifyPluginOptions) 
     });
 }
 
-export default loginRoutes;
+export async function logoutRoutes(app: FastifyInstance, options: FastifyPluginOptions) {
+    app.post('/logout', async (request, reply) => {
+        try {
+            const { error } = await supabase.auth.signOut();
+
+            if (error) {
+                console.error('Erreur lors de la déconnexion:', error);
+                return reply.code(500).send({ message: 'Erreur lors de la déconnexion' });
+            }
+
+            return reply.code(200).send({ message: 'Déconnexion réussie' });
+        } catch (err) {
+            return reply.code(500).send({ message: 'Erreur interne du serveur' });
+        }
+    });
+}

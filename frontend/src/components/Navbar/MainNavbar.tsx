@@ -52,6 +52,28 @@ export default function MainNavbar() {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
+  const handleLogout = async () => {
+    try {
+      // Appel à ton backend pour la déconnexion
+      const response = await fetch("http://localhost:3000/api/logout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({})
+      });
+      console.log(response);
+      // Nettoyage local
+      localStorage.clear();
+      sessionStorage.clear();
+
+      window.location.reload();
+    } catch (error) {
+      console.error("Erreur lors de la déconnexion :", error);
+      // alert("Erreur lors de la déconnexion.");
+    }
+  };
+
   return (
     <nav className="bg-white shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -136,13 +158,7 @@ export default function MainNavbar() {
                   <button
                     onClick={() => {
                       setIsOpen(false);
-
-                      // Exemple de logique de déconnexion :
-                      localStorage.removeItem("beatzone_session");
-                      localStorage.removeItem("beatzone_user"); // ou ton système d'auth
-                      localStorage.removeItem("mapbox.eventData.uuid:");
-
-                      window.location.href = "/login";
+                      handleLogout();
                     }}
                     className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   >

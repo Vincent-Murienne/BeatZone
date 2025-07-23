@@ -2,7 +2,7 @@ import Fastify, { fastify } from 'fastify'
 import cors from '@fastify/cors'
 import helmet from '@fastify/helmet'
 import registerRoutes from './register'
-import loginRoutes from './login'
+import { loginRoutes, logoutRoutes } from './login'
 import eventRoute from "./routes/eventRoute";
 import bandRoute from "./routes/bandRoute";
 import userRoutes from './routes/usersRoute';
@@ -17,6 +17,7 @@ app.register(cors, {
 
 app.register(registerRoutes)
 app.register(loginRoutes)
+app.register(logoutRoutes, { prefix: '/api' })
 
 app.register(helmet)
 const PORT = Number(process.env.PORT)
