@@ -342,7 +342,7 @@ function ProfilePage() {
                                                 type="text"
                                                 value={owner?.adresse ?? ''}
                                                 className={`w-full mt-1 px-3 py-2 border ${isEditing ? 'bg-white text-gray-800' : 'bg-gray-100 text-gray-500 cursor-not-allowed'} rounded-lg`}
-                                                onChange={(e) => setOwner(prev => prev ? { ...prev, pseudo: e.target.value } : null)}
+                                                onChange={(e) => setOwner(prev => prev ? { ...prev, adresse: e.target.value } : null)}
                                                 disabled={!isEditing}
                                             />
                                         </div>
@@ -353,7 +353,7 @@ function ProfilePage() {
                                                 type="text"
                                                 value={owner?.ville ?? ''}
                                                 className={`w-full mt-1 px-3 py-2 border ${isEditing ? 'bg-white text-gray-800' : 'bg-gray-100 text-gray-500 cursor-not-allowed'} rounded-lg`}
-                                                onChange={(e) => setOwner(prev => prev ? { ...prev, pseudo: e.target.value } : null)}
+                                                onChange={(e) => setOwner(prev => prev ? { ...prev, ville: e.target.value } : null)}
                                                 disabled={!isEditing}
                                             />
                                         </div>
