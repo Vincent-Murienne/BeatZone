@@ -177,7 +177,7 @@ export default function BandDetailsScreen() {
         );
     }
 
-    const socialLinks = band.band_socials;
+    const socialLinks = band.band_socials?.[0];
 
     return (
         <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>

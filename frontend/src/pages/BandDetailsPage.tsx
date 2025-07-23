@@ -125,7 +125,7 @@ export default function BandDetailsPage() {
 
     if (loadingEvents) return <p>Chargement des événements...</p>;
 
-    const socialLinks = band.band_socials;
+    const socialLinks = band.band_socials?.[0];
 
     return (
         <div className="max-w-4xl mx-auto px-4 py-8">
