@@ -5,19 +5,19 @@ export interface Suggestion {
     place_name: string;
 }
 
-interface SearchBarProps {
+interface SearchBarEventProps {
     searchTerm: string;
     setSearchTerm: (value: string) => void;
     onSelectSuggestion: (s: Suggestion) => void;
     apiUrl: string;
 }
 
-export default function SearchBar({
+export default function SearchBarEvent({
     searchTerm,
     setSearchTerm,
     onSelectSuggestion,
     apiUrl,
-}: SearchBarProps) {
+}: SearchBarEventProps) {
     const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
     const [isSearching, setIsSearching] = useState(false);
     const [hasSelectedSuggestion, setHasSelectedSuggestion] = useState(false);
@@ -32,7 +32,7 @@ export default function SearchBar({
 
         setIsSearching(true);
         try {
-            const res = await fetch(`${apiUrl}/suggestions`);
+            const res = await fetch(`${apiUrl}/events/suggestions`);
             const data: string[] = await res.json();
             const filtered = data
             .filter((s) => s.toLowerCase().includes(searchTerm.toLowerCase()))

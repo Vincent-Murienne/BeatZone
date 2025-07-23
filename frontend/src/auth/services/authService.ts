@@ -21,6 +21,23 @@ export const login = async (email: string, password: string) => {
   }
 };
 
+export const getUserById = async (id: string) => {
+  try {
+    const response = await apiFetch<User>(`${API_URL}/user/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return response;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+    throw new Error("Une erreur est survenue lors de la récupération de l'utilisateur");
+  }
+};
+
 export const signup = async (email: string, password: string) => {
   return await apiFetch("/signup", {
     method: "POST",
