@@ -5,7 +5,6 @@ import {
     fetchEventById,
     fetchUniqueGenres,
     fetchUniqueSuggestions,
-    fetchUniquePrices,
 } from "../models/eventModel";
 
 // GET /events
