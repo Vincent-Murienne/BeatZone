@@ -35,7 +35,7 @@ function LoginForm() {
                 setMessageType('success');
                 // Attendre que le message soit affiché avant de rediriger
                 setTimeout(() => {
-                    navigate('/');
+                    navigate('/map');
                 }, 1500);
             } else {
                 console.log("Réponse de login:", response);

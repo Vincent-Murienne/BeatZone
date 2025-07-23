@@ -20,9 +20,10 @@ export const login = async (email: string, password: string) => {
     throw new Error("Une erreur est survenue lors de la connexion");
   }
 };
+
 export const getUserById = async (id: string) => {
   try {
-    const response = await apiFetch<User>(`${API_URL}/users/${id}`, {
+    const response = await apiFetch<User>(`${API_URL}/user/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -36,7 +37,6 @@ export const getUserById = async (id: string) => {
     throw new Error("Une erreur est survenue lors de la récupération de l'utilisateur");
   }
 };
-
 
 export const signup = async (email: string, password: string) => {
   return await apiFetch("/signup", {

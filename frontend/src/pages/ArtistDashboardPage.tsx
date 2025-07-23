@@ -15,7 +15,7 @@ type Invitation = {
 };
 
 export default function ArtistDashboardPage() {
-  const { user, getUserById } = useAuth();
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState<'events' | 'invitations'>('events');
   const [invitations, setInvitations] = useState<Invitation[]>([]);
   const [artistEvents, setArtistEvents] = useState<Event[]>([]);
@@ -26,16 +26,15 @@ export default function ArtistDashboardPage() {
     if (!user?.id) return;
 
     try {
-      // Récupérer le profil de l'artiste
       const profileRes = await fetch(`${API_URL}/band/${user.id}`);
       const profileData = await profileRes.json();
+      
       setArtistProfile(profileData);
-
-      // Récupérer les événements de l'artiste
+      console.log(profileData);
       const eventsRes = await fetch(`${API_URL}/band/${profileData.id_band}/events`);
-      console.log(eventsRes);
       const eventsData = await eventsRes.json();
       setArtistEvents(eventsData);
+      console.log(eventsData);
     } catch (error) {
       console.error("Erreur lors du chargement des données:", error);
     }
@@ -55,7 +54,6 @@ export default function ArtistDashboardPage() {
       });
 
       if (response.ok) {
-        // Mettre à jour la liste des invitations
         setInvitations(invitations.map(inv => 
           inv.id === invitationId ? { ...inv, status } : inv
         ));
@@ -91,7 +89,27 @@ export default function ArtistDashboardPage() {
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Dashboard Artiste</h1>
           {artistProfile && (
-            <p className="mt-2 text-gray-600">{artistProfile.nom}</p>
+            <div className="mt-4">
+              <div className="flex items-center space-x-4">
+                <img 
+                  src={artistProfile.image_url} 
+                  alt={artistProfile.nom}
+                  className="w-24 h-24 rounded-full object-cover"
+                />
+                <div>
+                  <h2 className="text-2xl font-semibold">{artistProfile.nom}</h2>
+                  <p className="text-gray-600">{artistProfile.ville}, {artistProfile.pays}</p>
+                  <p className="text-gray-500 mt-1">{artistProfile.description}</p>
+                  <div className="mt-2">
+                    {artistProfile.avoir?.map((genre, index) => (
+                      <span key={index} className="inline-block bg-indigo-100 text-indigo-800 px-2 py-1 rounded-full text-sm mr-2">
+                        {genre.genre.type_musique}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
           )}
         </div>
 
@@ -135,25 +153,45 @@ export default function ArtistDashboardPage() {
             <div className="bg-white shadow overflow-hidden sm:rounded-md">
               <ul className="divide-y divide-gray-200">
                 {artistEvents.map((event) => (
-                  <li key={event.id_event}>
+                  <li key={event.id_event} className="hover:bg-gray-50">
                     <div className="px-4 py-4 sm:px-6">
                       <div className="flex items-center justify-between">
-                        <h3 className="text-lg font-medium text-gray-900">{event.titre}</h3>
-                        <span className="px-2 py-1 text-sm text-indigo-600 bg-indigo-100 rounded-full">
-                          {event.prix}€
-                        </span>
+                        <div className="flex items-center space-x-4">
+                          <img 
+                            src={event.image_url} 
+                            alt={event.titre}
+                            className="w-16 h-16 rounded-lg object-cover"
+                          />
+                          <div>
+                            <h3 className="text-lg font-medium text-gray-900">{event.titre}</h3>
+                            <p className="text-sm text-gray-500 mt-1">{event.description}</p>
+                          </div>
+                        </div>
+                        {event.prix === 0 ? (
+                          <span className="px-2 py-1 text-sm text-green-700 bg-green-100 rounded-full">
+                            Gratuit
+                          </span>
+                        ) : event.prix ? (
+                          <span className="px-2 py-1 text-sm text-indigo-600 bg-indigo-100 rounded-full">
+                            {event.prix}€
+                          </span>
+                        ) : null}
                       </div>
-                      <div className="mt-2">
-                        <p className="text-sm text-gray-600">
-                          {event.adresse}, {event.ville}
-                        </p>
-                        <p className="text-sm text-gray-500 mt-1">
-                          Du {formatDate(event.debut)} au {formatDate(event.fin)}
-                        </p>
-                      </div>
+                      {event.debut && event.fin && (
+                        <div className="mt-2">
+                          <p className="text-sm text-gray-500">
+                            Du {formatDate(event.debut)} au {formatDate(event.fin)}
+                          </p>
+                        </div>
+                      )}
                     </div>
                   </li>
                 ))}
+                {artistEvents.length === 0 && (
+                  <li className="px-4 py-4 sm:px-6">
+                    <p className="text-gray-500">Aucun événement trouvé</p>
+                  </li>
+                )}
               </ul>
             </div>
           </div>
@@ -166,9 +204,17 @@ export default function ArtistDashboardPage() {
                   <li key={invitation.id}>
                     <div className="px-4 py-4 sm:px-6">
                       <div className="flex items-center justify-between">
-                        {/* <h3 className="text-lg font-medium text-gray-900">
-                          {invitation.event.nom}
-                        </h3> */}
+                        <div className="flex items-center space-x-4">
+                          <img 
+                            src={invitation.event.image_url} 
+                            alt={invitation.event.titre}
+                            className="w-16 h-16 rounded-lg object-cover"
+                          />
+                          <div>
+                            <h3 className="text-lg font-medium text-gray-900">{invitation.event.titre}</h3>
+                            <p className="text-sm text-gray-500">{invitation.event.description}</p>
+                          </div>
+                        </div>
                         <div className="flex space-x-2">
                           {invitation.status === 'pending' ? (
                             <>
@@ -196,19 +242,18 @@ export default function ArtistDashboardPage() {
                           )}
                         </div>
                       </div>
-                      <div className="mt-2">
-                        <p className="text-sm text-gray-600">
-                          {invitation.event.adresse}, {invitation.event.ville}
-                        </p>
-                        <p className="text-sm text-gray-500 mt-1">
-                          Du {formatDate(invitation.event.debut)} au {formatDate(invitation.event.fin)}
-                        </p>
-                        {invitation.message && (
-                          <p className="text-sm text-gray-600 mt-2 italic">
-                            "{invitation.message}"
+                      {invitation.event.debut && invitation.event.fin && (
+                        <div className="mt-2">
+                          <p className="text-sm text-gray-500">
+                            Du {formatDate(invitation.event.debut)} au {formatDate(invitation.event.fin)}
                           </p>
-                        )}
-                      </div>
+                        </div>
+                      )}
+                      {invitation.message && (
+                        <p className="text-sm text-gray-600 mt-2 italic">
+                          "{invitation.message}"
+                        </p>
+                      )}
                     </div>
                   </li>
                 ))}

@@ -2,6 +2,8 @@ import { Navigate } from 'react-router-dom';
 import { useAuth } from '../context/useAuth';
 import type { ReactNode } from 'react';
 import type { UserRole } from '../../types/role';
+import type { User } from '../context/types';
+import { useEffect, useState } from 'react';
 
 interface ArtistRouteProps {
   children: ReactNode;
@@ -10,8 +12,18 @@ interface ArtistRouteProps {
 
 export default function ArtistRoute({ children, redirectTo = '/login' }: ArtistRouteProps) {
   const { user, loading, getUserById } = useAuth();
-  console.log(user);
-  console.log(getUserById(user?.id || ''));
+  const [userData, setUserData] = useState<User | null>(null);
+
+  const fetchUserData = async () => {
+    if (user?.id) {
+      const userData = await getUserById(user.id);
+      setUserData(userData)
+    }
+  };
+
+  useEffect(() => {
+    fetchUserData();
+  }, [user]);
   
   if (loading) {
     return (
@@ -25,7 +37,7 @@ export default function ArtistRoute({ children, redirectTo = '/login' }: ArtistR
     return <Navigate to={redirectTo} replace />;
   }
 
-  const userRole = user.role as UserRole;
+  const userRole = userData?.role as UserRole;
   if (userRole !== 'artist') {
     return (
       <div className="min-h-screen flex items-center justify-center">
