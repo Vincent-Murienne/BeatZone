@@ -1,3 +1,4 @@
+import { log } from "console";
 import { supabase } from "../db";
 
 export const fetchAllBands = async () => {
@@ -64,3 +65,26 @@ export const fetchUserBand = async (userId: string) => {
         .eq("id_user", userId)
         .single();
 }
+
+export const updateBand = async (id_band: number, bandData: any) => {
+
+    const allowedFields = ['nom', 'description', 'image_url', 'cree_le', 'id_user', 'ville', 'pays'];
+    const filteredData = Object.fromEntries(
+        Object.entries(bandData).filter(([key]) => allowedFields.includes(key))
+    );
+
+    log(`Updating band with ID: ${id_band} with data:`, filteredData);
+
+    const { data, error } = await supabase
+        .from("band")
+        .update(filteredData)
+        .eq("id_band", id_band)
+        .single();
+
+    if (error) {
+        log(`Error updating band with ID ${id_band}:`, error);
+        throw new Error(`Error updating band info: ${error.message}`);
+    }
+
+    return data;
+};
