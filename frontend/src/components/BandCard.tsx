@@ -24,7 +24,22 @@ export default function BandCard({ bands }: BandCardProps) {
                 className="w-full h-48 object-cover rounded-xl mb-3"
                 />
                 <h3 className="text-lg font-bold">{band.nom}</h3>
-                <p className="text-sm text-gray-600">{band.genre}</p>
+                {band.avoir && band.avoir.length > 0 ? (
+                    <div className="flex flex-wrap gap-2">
+                        {band.avoir.map((a, index) =>
+                        a.genre?.type_musique ? (
+                            <span
+                            key={index}
+                            className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full"
+                            >
+                            {a.genre.type_musique}
+                            </span>
+                        ) : null
+                        )}
+                    </div>
+                ) : (
+                <p className="text-sm text-gray-500">Aucun genre renseigné.</p>
+                )}
             </Link>
             ))}
         </div>

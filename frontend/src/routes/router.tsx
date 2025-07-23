@@ -3,6 +3,7 @@ import RegisterPage from '../pages/RegisterPage'
 import LoginPage from '../pages/LoginPage'
 import PublicRoute from '../auth/guards/PublicRoute'
 import BandDetailsPage from '../pages/BandDetailsPage'
+import ListBandPage from '../pages/ListBandPage'
 import LandingPage from '../pages/LandingPage'
 import MapPage from '../pages/MapPage'
 import EventDetailsPage from '../pages/EventDetailsPage'
@@ -36,6 +37,11 @@ function AppRouter() {
                 <Route path="/event/:id" element={
                     <ProtectedRoute>
                         <EventDetailsPage />
+                    </ProtectedRoute>
+                } />
+                <Route path="/list-band" element={
+                    <ProtectedRoute>
+                        <ListBandPage />
                     </ProtectedRoute>
                 } />
                 <Route path="/band/:id" element={
