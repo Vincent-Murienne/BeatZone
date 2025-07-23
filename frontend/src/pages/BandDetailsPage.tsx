@@ -56,7 +56,7 @@ export default function BandDetailsPage() {
 
     if (loadingEvents) return <p>Chargement des événements...</p>;
 
-    const socialLinks = band.band_socials?.[0];
+    const socialLinks = band.band_socials;
 
     return (
         <div className="max-w-4xl mx-auto px-4 py-8">
@@ -109,11 +109,11 @@ export default function BandDetailsPage() {
         </div>
 
         {/* Membres */}
-        {band.member && band.member.length > 0 && (
+        {band.membres && band.membres.length > 0 && (
             <div className="mb-8">
             <h2 className="text-lg font-semibold mb-2">Membres du groupe :</h2>
             <ul className="space-y-4">
-                {band.member.map((membre) => (
+                {band.membres.map((membre) => (
                 <li
                     key={membre.id_member}
                     className="p-4 border rounded-lg shadow-sm bg-white"

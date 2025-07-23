@@ -1,5 +1,5 @@
 import { FastifyRequest, FastifyReply } from "fastify";
-import { fetchAllBands, fetchBandById, fetchMusicGenre, searchBandsByName, fetchEventsByBandId } from "../models/bandModel";
+import { fetchAllBands, fetchBandById, fetchMusicGenre, searchBandsByName, fetchEventsByBandId, updateBand } from "../models/bandModel";
 import { Band } from "../types/band";
 
 // GET /bands
@@ -16,6 +16,20 @@ export const getBandById = async (req: FastifyRequest, reply: FastifyReply) => {
     if (error) return reply.status(500).send({ error: error.message });
     return reply.send(data);
 };
+
+export const updateBandInfo = async (req: FastifyRequest, reply: FastifyReply) => {
+    const { id } = req.params as { id: number };
+    const bandData = req.body;
+
+    console.log(`Received request to update band with ID: ${id}`, bandData);
+    try {
+        const updatedBand = await updateBand(id, bandData);
+        return reply.send(updatedBand);
+    } catch (error) {
+        const errorMessage = (error instanceof Error) ? error.message : 'Unknown error';
+        return reply.status(500).send({ error: errorMessage });
+    }
+}
 
 // GET /bands/search?query=
 export const getBandSuggestions = async (req: FastifyRequest, reply: FastifyReply) => {
@@ -43,10 +57,10 @@ export const getAllGenres = async (_req: FastifyRequest, reply: FastifyReply) =>
     const genres = new Set<string>();
 
     for (const band of data as unknown as Band[]) {
-            for (const a of band.avoir || []) {
-                const genre = a.genre?.type_musique;
-                if (genre) genres.add(genre);
-            }
+        for (const a of band.avoir || []) {
+            const genre = a.genre?.type_musique;
+            if (genre) genres.add(genre);
+        }
     }
 
     return reply.send(Array.from(genres));
