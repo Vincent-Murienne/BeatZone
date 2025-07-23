@@ -5,12 +5,12 @@ import { log } from "console";
 export const getOwnerByUserId = async (req: FastifyRequest, reply: FastifyReply) => {
     const { userId } = req.params as { userId: string };
     console.log(`ID: ${userId}`);
-    const data = await fetchOwnerByIdUser(userId);
-    if (!data) {
-        return reply.status(404).send({ error: 'Owner not found' });
-    }
 
     try {
+        const data = await fetchOwnerByIdUser(userId);
+        if (!data) {
+            return reply.status(404).send({ error: 'Owner not found' });
+        }
         return reply.send(data);
     } catch (error) {
         const errorMessage = (error instanceof Error) ? error.message : 'Unknown error';
