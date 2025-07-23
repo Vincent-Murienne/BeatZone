@@ -24,3 +24,28 @@ export async function removeEventFromFavorites(id_user: string, id_event: number
     }
     return response.json();
 }
+export async function addBandToFavorites(id_user: string, id_band: number) {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/favorites`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id_user, id_band }),
+    });
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Erreur lors de l'ajout du favori");
+    }
+    return response.json();
+}
+
+export async function removeBandFromFavorites(id_user: string, id_band: number) {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/favorites`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id_user, id_band }),
+    });
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Erreur lors de la suppression du favori");
+    }
+    return response.json();
+}
