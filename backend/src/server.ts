@@ -6,11 +6,13 @@ import loginRoutes from './login'
 import eventRoute from "./routes/eventRoute";
 import bandRoute from "./routes/bandRoute";
 import userRoutes from './routes/usersRoute';
+import ownerRoutes from './routes/ownerRoute';
 
 const app = Fastify()
 app.register(cors, {
     origin: 'http://localhost:5173',
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
 })
 
 app.register(registerRoutes)
@@ -37,5 +39,6 @@ app.listen({
 app.register(eventRoute, { prefix: "/api" });
 app.register(bandRoute, { prefix: "/api" });
 app.register(userRoutes, { prefix: "/api" });
+app.register(ownerRoutes, { prefix: "/api" });
 
 export default app;
