@@ -8,6 +8,7 @@ import bandRoute from "./routes/bandRoute";
 import userRoutes from './routes/usersRoute';
 import favoriteRoutes from './routes/favoriteRoute';
 import favoriteEventRoutes from "./routes/favoriteEventRoute";
+import ownerRoutes from "./routes/ownerRoute";
 
 
 const app = Fastify()
@@ -43,5 +44,6 @@ app.register(bandRoute, { prefix: "/api" });
 app.register(userRoutes, { prefix: "/api" });
 app.register(favoriteRoutes, { prefix: "/api" });
 app.register(favoriteEventRoutes, { prefix: "/api" });
+app.register(ownerRoutes, { prefix: "/api" });
 
 export default app;
