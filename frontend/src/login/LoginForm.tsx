@@ -13,10 +13,10 @@ function LoginForm() {
     const [rememberMe, setRememberMe] = useState(false);
     const [message, setMessage] = useState<string | null>(null);
     const [messageType, setMessageType] = useState<'success' | 'error' | null>(null);
-    
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        
+
         if (!email || !password) {
             setMessage("Veuillez remplir tous les champs");
             setMessageType('error');
@@ -26,10 +26,10 @@ function LoginForm() {
         setIsLoading(true);
         setMessage(null);
         setMessageType(null);
-        
+
         try {
             const response = await login(email, password);
-            
+
             if (response && response.user) {
                 setMessage(response.message || 'Connexion réussie !');
                 setMessageType('success');
@@ -39,7 +39,7 @@ function LoginForm() {
                 }, 1500);
             } else {
                 console.log("Réponse de login:", response);
-                
+
                 throw new Error(response?.message || 'Réponse invalide du serveur');
             }
         } catch (error) {
@@ -68,7 +68,7 @@ function LoginForm() {
                             className="appearance-none rounded-lg relative block w-full px-3 py-3 pl-10 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            autoComplete="email"
+                            autoComplete="new-email"
                             required
                             disabled={isLoading}
                         />
@@ -89,7 +89,8 @@ function LoginForm() {
                             className="appearance-none rounded-lg relative block w-full px-3 py-3 pl-10 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            autoComplete="current-password"
+                            autoComplete="new-password"
+
                             required
                             disabled={isLoading}
                         />
@@ -112,12 +113,11 @@ function LoginForm() {
             </div>
 
             {message && (
-                <div 
-                    className={`rounded-md p-4 ${
-                        messageType === 'success' 
-                            ? 'bg-green-50 text-green-800 border border-green-200' 
-                            : 'bg-red-50 text-red-800 border border-red-200'
-                    }`}
+                <div
+                    className={`rounded-md p-4 ${messageType === 'success'
+                        ? 'bg-green-50 text-green-800 border border-green-200'
+                        : 'bg-red-50 text-red-800 border border-red-200'
+                        }`}
                 >
                     <p className="text-sm font-medium">{message}</p>
                 </div>
