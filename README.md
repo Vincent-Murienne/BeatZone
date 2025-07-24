@@ -119,22 +119,28 @@ npm install
 
 Backend (backend/.env.development)
 
-PORT="votre_port"
-SUPABASE_URL="https://votre_instance.supabase.co"
-SUPABASE_KEY="votre_clé_supabase"
+```bash
+   PORT="votre_port"
+   SUPABASE_URL="https://votre_instance.supabase.co"
+   SUPABASE_KEY="votre_clé_supabase"
+```
 
 Frontend Web (frontend/.env.development)
 
-VITE_URL_API="https://votre_site/api"
-VITE_MAPBOX_TOKEN="votre_token_mapbox"
-VITE_SUPABASE_URL="https://votre_instance.supabase.co"
-VITE_SUPABASE_KEY="votre_clé_supabase"
+```bash
+   VITE_URL_API="https://votre_site/api"
+   VITE_MAPBOX_TOKEN="votre_token_mapbox"
+   VITE_SUPABASE_URL="https://votre_instance.supabase.co"
+   VITE_SUPABASE_KEY="votre_clé_supabase"
+```
 
 Frontend Mobile (mobile/.env.development)
 
-EXPO_PUBLIC_URL_API="https://votre_site/api"
-EXPO_SUPABASE_URL="https://votre_instance.supabase.co"
-EXPO_SUPABASE_KEY="votre_clé_supabase"
+```bash
+   EXPO_PUBLIC_URL_API="https://votre_site/api"
+   EXPO_SUPABASE_URL="https://votre_instance.supabase.co"
+   EXPO_SUPABASE_KEY="votre_clé_supabase"
+```
 
 ### 3. Lancement du projet avec Docker
 
@@ -152,10 +158,12 @@ docker compose down
 ### 4. Lancement de l’application mobile
 1) Installer l’application Expo Go sur votre téléphone.
 2) Dans le dossier mobile, exécutez :
+   
    ```bash
     npm install
     npx expo start
    ```
-3) Scanner le QR Code affiché avec l’application Expo Go pour accéder à l’application sur mobil
+   
+4) Scanner le QR Code affiché avec l’application Expo Go pour accéder à l’application sur mobil
 
 
