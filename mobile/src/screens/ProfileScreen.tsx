@@ -7,6 +7,8 @@ import {
     TouchableOpacity,
     Image,
     Alert,
+    StyleSheet,
+    Button,
 } from 'react-native';
 import type { Band } from '../types/band';
 import type { Users } from '../types/users';
@@ -137,160 +139,192 @@ export default function ProfileScreen() {
     }
 
     return (
-        <ScrollView className="p-4 bg-gray-100 min-h-screen">
-            <View className="items-center mb-6">
-                <Image
-                    source={{ uri: user.avatar_url || 'https://placekitten.com/200/200' }}
-                    className="w-24 h-24 rounded-full mb-3"
-                />
-                <Text className="text-2xl font-bold mb-2">{user.pseudo}</Text>
-                <TouchableOpacity
-                    onPress={() => setIsEditing(!isEditing)}
-                    className="bg-blue-500 px-4 py-2 rounded-full mb-2"
-                >
-                    <Text className="text-white">{isEditing ? 'Annuler' : 'Modifier'}</Text>
-                </TouchableOpacity>
-                {isEditing && (
-                    <TouchableOpacity
-                        onPress={handleSave}
-                        className="bg-green-600 px-4 py-2 rounded-full"
-                    >
-                        <Text className="text-white">Enregistrer</Text>
-                    </TouchableOpacity>
-                )}
+        <ScrollView contentContainerStyle={styles.container}>
+            <View style={styles.header}>
+                <Image source={{ uri: user.avatar_url || 'https://placekitten.com/200/200' }} style={styles.avatar} />
+                <Text style={styles.username}>{user.pseudo}</Text>
+
+                <Button title={isEditing ? 'Annuler' : 'Modifier'} onPress={() => setIsEditing(!isEditing)} />
+                {isEditing && <Button title="Enregistrer" onPress={handleSave} />}
             </View>
 
             {/* Onglets */}
-            <View className="flex-row flex-wrap justify-center mb-4">
-                {['personal', 'artist', 'owner', 'favorites', 'eventFavorites'].map((tab) => {
-                    if (tab === 'artist' && user.role !== 'artist') return null;
-                    if (tab === 'owner' && user.role !== 'owner') return null;
-                    const label = {
-                        personal: 'Perso',
-                        artist: 'Artiste',
-                        owner: 'Owner',
-                        favorites: 'Favoris',
-                        eventFavorites: 'Événements',
-                    }[tab];
-                    return (
-                        <TouchableOpacity
-                            key={tab}
-                            onPress={() => setActiveTab(tab as 'personal' | 'artist' | 'owner' | 'favorites' | 'eventFavorites')}
-                            className={`m-1 px-3 py-2 rounded-full ${activeTab === tab ? 'bg-blue-600' : 'bg-gray-300'}`}
-                        >
-                            <Text className={activeTab === tab ? 'text-white' : 'text-black'}>{label}</Text>
-                        </TouchableOpacity>
-                    );
-                })}
+            <View style={styles.tabs}>
+                <TabButton title="Perso" active={activeTab === 'personal'} onPress={() => setActiveTab('personal')} />
+                {user.role === 'artist' && <TabButton title="Artiste" active={activeTab === 'artist'} onPress={() => setActiveTab('artist')} />}
+                {user.role === 'owner' && <TabButton title="Owner" active={activeTab === 'owner'} onPress={() => setActiveTab('owner')} />}
+                <TabButton title="Favoris" active={activeTab === 'favorites'} onPress={() => setActiveTab('favorites')} />
+                <TabButton title="Événements" active={activeTab === 'eventFavorites'} onPress={() => setActiveTab('eventFavorites')} />
             </View>
 
-            {/* Onglet Perso */}
+            {/* Contenu des onglets */}
             {activeTab === 'personal' && (
-                <View>
-                    <Text className="font-semibold mb-1">Email</Text>
+                <>
+                    <Text style={styles.label}>Email</Text>
                     <TextInput
-                        className="bg-white p-2 rounded mb-3"
-                        editable={isEditing}
                         value={user.email}
                         onChangeText={(text) => setUser({ ...user, email: text })}
-                    />
-                    <Text className="font-semibold mb-1">Bio</Text>
-                    <TextInput
-                        className="bg-white p-2 rounded h-24"
                         editable={isEditing}
-                        multiline
+                        style={styles.input}
+                    />
+
+                    <Text style={styles.label}>Bio</Text>
+                    <TextInput
                         value={user.bio}
                         onChangeText={(text) => setUser({ ...user, bio: text })}
-                    />
-                </View>
-            )}
-
-            {/* Onglet Artiste */}
-            {activeTab === 'artist' && band && (
-                <View>
-                    <Text className="font-semibold mb-1">Nom d'artiste</Text>
-                    <TextInput
-                        className="bg-white p-2 rounded mb-3"
-                        editable={isEditing}
-                        value={band.nom}
-                        onChangeText={(text) => setBand({ ...band, nom: text })}
-                    />
-                    <Text className="font-semibold mb-1">Description</Text>
-                    <TextInput
-                        className="bg-white p-2 rounded h-24"
                         editable={isEditing}
                         multiline
+                        style={[styles.input, { height: 100 }]}
+                    />
+                </>
+            )}
+
+            {activeTab === 'artist' && band && (
+                <>
+                    <Text style={styles.label}>Nom de scène</Text>
+                    <TextInput
+                        value={band.nom}
+                        onChangeText={(text) => setBand({ ...band, nom: text })}
+                        editable={isEditing}
+                        style={styles.input}
+                    />
+                    <Text style={styles.label}>Description</Text>
+                    <TextInput
                         value={band.description}
                         onChangeText={(text) => setBand({ ...band, description: text })}
+                        editable={isEditing}
+                        multiline
+                        style={[styles.input, { height: 80 }]}
                     />
-                </View>
+                </>
             )}
 
-            {/* Onglet Owner */}
             {activeTab === 'owner' && owner && (
-                <View>
-                    <Text className="font-semibold mb-1">Nom établissement</Text>
+                <>
+                    <Text style={styles.label}>Nom de l'établissement</Text>
                     <TextInput
-                        className="bg-white p-2 rounded mb-2"
-                        editable={isEditing}
                         value={owner.nom_etablissement}
                         onChangeText={(text) => setOwner({ ...owner, nom_etablissement: text })}
-                    />
-                    <Text className="font-semibold mb-1">Adresse</Text>
-                    <TextInput
-                        className="bg-white p-2 rounded mb-2"
                         editable={isEditing}
+                        style={styles.input}
+                    />
+                    <Text style={styles.label}>Adresse</Text>
+                    <TextInput
                         value={owner.adresse}
                         onChangeText={(text) => setOwner({ ...owner, adresse: text })}
-                    />
-                    <Text className="font-semibold mb-1">Ville</Text>
-                    <TextInput
-                        className="bg-white p-2 rounded mb-2"
                         editable={isEditing}
+                        style={styles.input}
+                    />
+                    <Text style={styles.label}>Ville</Text>
+                    <TextInput
                         value={owner.ville}
                         onChangeText={(text) => setOwner({ ...owner, ville: text })}
-                    />
-                    <Text className="font-semibold mb-1">Code postal</Text>
-                    <TextInput
-                        className="bg-white p-2 rounded"
                         editable={isEditing}
+                        style={styles.input}
+                    />
+                    <Text style={styles.label}>Code postal</Text>
+                    <TextInput
                         value={owner.code_postal}
                         onChangeText={(text) => setOwner({ ...owner, code_postal: text })}
+                        editable={isEditing}
+                        style={styles.input}
                     />
-                </View>
+                </>
             )}
 
-            {/* Onglet Favoris */}
             {activeTab === 'favorites' && (
-                <View>
+                <>
+                    <Text style={styles.label}>Groupes favoris</Text>
                     {favorites.length === 0 ? (
-                        <Text className="italic text-gray-500">Aucun favori</Text>
+                        <Text style={styles.empty}>Aucun favori</Text>
                     ) : (
                         favorites.map((b) => (
-                            <View key={b.id_band} className="bg-white p-3 rounded mb-2">
-                                <Text className="font-bold">{b.nom}</Text>
+                            <View key={b.id_band} style={styles.card}>
+                                <Text style={styles.bold}>{b.nom}</Text>
                                 <Text>{b.avoir?.map((a) => a.genre.type_musique).join(', ')}</Text>
                             </View>
                         ))
                     )}
-                </View>
+                </>
             )}
 
-            {/* Onglet Event Favoris */}
             {activeTab === 'eventFavorites' && (
-                <View>
+                <>
+                    <Text style={styles.label}>Événements favoris</Text>
                     {eventFavorites.length === 0 ? (
-                        <Text className="italic text-gray-500">Aucun événement favori</Text>
+                        <Text style={styles.empty}>Aucun événement</Text>
                     ) : (
                         eventFavorites.map((ev) => (
-                            <View key={ev.id_event} className="bg-white p-3 rounded mb-2">
-                                <Text className="font-bold">{ev.titre}</Text>
+                            <View key={ev.id_event} style={styles.card}>
+                                <Text style={styles.bold}>{ev.titre}</Text>
                                 <Text>{ev.id_owner} — {ev.debut}</Text>
                             </View>
                         ))
                     )}
-                </View>
+                </>
             )}
         </ScrollView>
     );
 }
+
+type TabButtonProps = {
+    title: string;
+    onPress: () => void;
+    active: boolean;
+};
+
+const TabButton = ({ title, onPress, active }: TabButtonProps) => (
+    <TouchableOpacity onPress={onPress} style={[styles.tabButton, active && styles.tabActive]}>
+        <Text style={{ color: active ? '#fff' : '#000' }}>{title}</Text>
+    </TouchableOpacity>
+);
+
+
+const styles = StyleSheet.create({
+    container: { padding: 20, backgroundColor: '#f0f4f8' },
+    header: { alignItems: 'center', marginBottom: 20 },
+    avatar: { width: 100, height: 100, borderRadius: 50, marginBottom: 10 },
+    username: { fontSize: 24, fontWeight: 'bold', marginBottom: 10 },
+    tabs: { flexDirection: 'row', justifyContent: 'space-around', marginVertical: 16, flexWrap: 'wrap' },
+    tabButton: {
+        paddingVertical: 8,
+        paddingHorizontal: 16,
+        backgroundColor: '#ddd',
+        borderRadius: 20,
+        margin: 4,
+    },
+    tabActive: {
+        backgroundColor: '#4f46e5',
+    },
+    input: {
+        borderWidth: 1,
+        borderColor: '#ccc',
+        padding: 10,
+        borderRadius: 8,
+        backgroundColor: '#fff',
+        marginBottom: 12,
+    },
+    label: {
+        fontWeight: 'bold',
+        marginBottom: 4,
+        marginTop: 12,
+    },
+    card: {
+        backgroundColor: '#fff',
+        padding: 12,
+        borderRadius: 8,
+        marginBottom: 10,
+    },
+    bold: {
+        fontWeight: 'bold',
+    },
+    empty: {
+        fontStyle: 'italic',
+        color: '#666',
+        marginBottom: 10,
+    },
+    loading: {
+        padding: 40,
+        textAlign: 'center',
+    }
+});
