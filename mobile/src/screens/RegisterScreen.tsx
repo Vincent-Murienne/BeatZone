@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Alert, ScrollView, StyleSheet } from 'react-native';
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
@@ -90,28 +90,24 @@ const Register = () => {
     };
 
     return (
-        <ScrollView contentContainerStyle={{ padding: 20 }}>
-            <Text className="text-center text-2xl font-bold mb-4">Inscription</Text>
+        <ScrollView contentContainerStyle={styles.container}>
+            <Text style={styles.title}>Inscription</Text>
 
             {step === 1 && (
                 <>
-                    <Text className="text-center mb-4">Vous êtes :</Text>
-                    {['artist', 'user', 'owner'].map((type) => (
-                        <TouchableOpacity
-                            key={type}
-                            onPress={() => setUserType(type as any)}
-                            className={`p-4 rounded-lg mb-2 border ${userType === type ? 'bg-purple-200 border-purple-700' : 'bg-gray-200'
-                                }`}
-                        >
-                            <Text className="text-center capitalize">{type === 'artist' ? 'Groupe / Artiste' : type === 'user' ? 'Utilisateur' : 'Organisateur'}</Text>
-                        </TouchableOpacity>
-                    ))}
-                    <TouchableOpacity
-                        onPress={() => userType && setStep(2)}
-                        disabled={!userType}
-                        className="bg-purple-500 p-4 rounded-xl mt-4"
-                    >
-                        <Text className="text-white text-center font-semibold">Suivant</Text>
+                    <Text style={styles.subtitle}>Vous êtes :</Text>
+                    <TouchableOpacity style={userType === 'artist' ? styles.activeBtn : styles.btn} onPress={() => setUserType('artist')}>
+                        <Text style={styles.btnText}>Un groupe / artiste</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={userType === 'user' ? styles.activeBtn : styles.btn} onPress={() => setUserType('user')}>
+                        <Text style={styles.btnText}>Un utilisateur</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={userType === 'owner' ? styles.activeBtn : styles.btn} onPress={() => setUserType('owner')}>
+                        <Text style={styles.btnText}>Un organisateur</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.nextBtn} disabled={!userType} onPress={() => setStep(2)}>
+                        <Text style={styles.nextBtnText}>Suivant</Text>
                     </TouchableOpacity>
                 </>
             )}
@@ -120,79 +116,206 @@ const Register = () => {
                 <>
                     {userType === 'artist' && (
                         <>
-                            <TextInput placeholder="Nom du groupe" value={artistMemberName} onChangeText={setArtistMemberName} className="input" />
-                            <TextInput placeholder="Email" value={artistEmail} onChangeText={setArtistEmail} className="input" keyboardType="email-address" />
-                            <TextInput placeholder="Mot de passe" value={artistPassword} onChangeText={setArtistPassword} secureTextEntry className="input" />
+                            <TextInput
+                                placeholder="Nom du membre"
+                                value={artistMemberName}
+                                onChangeText={setArtistMemberName}
+                                className="input"
+                                style={styles.input}
+                            />
+                            <TextInput
+                                placeholder="Email"
+                                value={artistEmail}
+                                onChangeText={setArtistEmail}
+                                className="input"
+                                keyboardType="email-address"
+                                style={styles.input}
+                            />
+                            <TextInput
+                                placeholder="Mot de passe"
+                                value={artistPassword}
+                                onChangeText={setArtistPassword}
+                                secureTextEntry
+                                className="input"
+                                style={styles.input}
+                            />
                         </>
                     )}
 
                     {userType === 'user' && (
                         <>
-                            <TextInput placeholder="Pseudo" value={userPseudo} onChangeText={setUserPseudo} className="input" />
-                            <TextInput placeholder="Email" value={userEmail} onChangeText={setUserEmail} className="input" keyboardType="email-address" />
-                            <TextInput placeholder="Mot de passe" value={userPassword} onChangeText={setUserPassword} secureTextEntry className="input" />
+                            <TextInput
+                                placeholder="Pseudo"
+                                value={userPseudo}
+                                onChangeText={setUserPseudo}
+                                className="input"
+                                style={styles.input}
+                            />
+                            <TextInput
+                                placeholder="Email"
+                                value={userEmail}
+                                onChangeText={setUserEmail}
+                                className="input"
+                                keyboardType="email-address"
+                                style={styles.input}
+                            />
+                            <TextInput
+                                placeholder="Mot de passe"
+                                value={userPassword}
+                                onChangeText={setUserPassword}
+                                secureTextEntry
+                                className="input"
+                                style={styles.input}
+                            />
                         </>
                     )}
 
                     {userType === 'owner' && (
                         <>
-                            <TextInput placeholder="Prénom" value={ownerFirstName} onChangeText={setOwnerFirstName} className="input" />
-                            <TextInput placeholder="Nom" value={ownerLastName} onChangeText={setOwnerLastName} className="input" />
-                            <TextInput placeholder="Email" value={ownerEmail} onChangeText={setOwnerEmail} className="input" keyboardType="email-address" />
-                            <TextInput placeholder="Mot de passe" value={ownerPassword} onChangeText={setOwnerPassword} secureTextEntry className="input" />
+                            <TextInput
+                                placeholder="Prénom"
+                                value={ownerFirstName}
+                                onChangeText={setOwnerFirstName}
+                                className="input"
+                                style={styles.input}
+                            />
+                            <TextInput
+                                placeholder="Nom"
+                                value={ownerLastName}
+                                onChangeText={setOwnerLastName}
+                                className="input"
+                                style={styles.input}
+                            />
+                            <TextInput
+                                placeholder="Email"
+                                value={ownerEmail}
+                                onChangeText={setOwnerEmail}
+                                className="input"
+                                keyboardType="email-address"
+                                style={styles.input}
+                            />
+                            <TextInput
+                                placeholder="Mot de passe"
+                                value={ownerPassword}
+                                onChangeText={setOwnerPassword}
+                                secureTextEntry
+                                className="input"
+                                style={styles.input}
+                            />
                         </>
                     )}
 
-                    <View className="flex-row justify-between mt-4">
-                        <TouchableOpacity onPress={() => setStep(1)} className="p-3">
-                            <Text>Retour</Text>
+                    <View style={styles.row}>
+                        <TouchableOpacity onPress={() => setStep(1)} className="p-3 items-start">
+                            <Text style={styles.link}>Retour</Text>
                         </TouchableOpacity>
 
                         {userType === 'user' ? (
-                            <TouchableOpacity onPress={handleSubmit} className="bg-purple-500 p-3 rounded-xl">
-                                <Text className="text-white">Créer un compte</Text>
+                            <TouchableOpacity onPress={handleSubmit} className="bg-purple-500 p-3 rounded-xl items-end">
+                                <Text style={styles.link}>Créer un compte</Text>
                             </TouchableOpacity>
                         ) : (
-                            <TouchableOpacity onPress={() => setStep(3)} className="bg-purple-500 p-3 rounded-xl">
-                                <Text className="text-white">Suivant</Text>
+                            <TouchableOpacity onPress={() => setStep(3)} className="bg-purple-500 p-3 rounded-xl items-end">
+                                <Text style={styles.link}>Suivant</Text>
                             </TouchableOpacity>
                         )}
                     </View>
                 </>
             )}
 
+
             {step === 3 && (
                 <>
                     {userType === 'artist' && (
                         <>
-                            <TextInput placeholder="Nom du groupe" value={artistNameBand} onChangeText={setArtistNameBand} className="input" />
-                            <TextInput placeholder="Genre musical" value={artistMusic} onChangeText={setArtistMusic} className="input" />
-                            <TextInput placeholder="Ville" value={artistVille} onChangeText={setArtistVille} className="input" />
-                            <TextInput placeholder="Pays" value={artistPays} onChangeText={setArtistPays} className="input" />
+                            <TextInput placeholder="Nom du groupe" value={artistNameBand} onChangeText={setArtistNameBand} style={styles.input} />
+                            <TextInput placeholder="Genre musical" value={artistMusic} onChangeText={setArtistMusic} style={styles.input} />
+                            <TextInput placeholder="Ville" value={artistVille} onChangeText={setArtistVille} style={styles.input} />
+                            <TextInput placeholder="Pays" value={artistPays} onChangeText={setArtistPays} style={styles.input} />
                         </>
                     )}
-
                     {userType === 'owner' && (
                         <>
-                            <TextInput placeholder="Nom de l'établissement" value={ownerBusinessName} onChangeText={setOwnerBusinessName} className="input" />
-                            <TextInput placeholder="Adresse" value={ownerAddress} onChangeText={setOwnerAddress} className="input" />
-                            <TextInput placeholder="Ville" value={ownerVille} onChangeText={setOwnerVille} className="input" />
-                            <TextInput placeholder="Code postal" value={ownerCp} onChangeText={setOwnerCp} className="input" />
+                            <TextInput placeholder="Établissement" value={ownerBusinessName} onChangeText={setOwnerBusinessName} style={styles.input} />
+                            <TextInput placeholder="Adresse" value={ownerAddress} onChangeText={setOwnerAddress} style={styles.input} />
+                            <TextInput placeholder="Ville" value={ownerVille} onChangeText={setOwnerVille} style={styles.input} />
+                            <TextInput placeholder="Code postal" value={ownerCp} onChangeText={setOwnerCp} style={styles.input} />
                         </>
                     )}
 
-                    <View className="flex-row justify-between mt-4">
-                        <TouchableOpacity onPress={() => setStep(2)} className="p-3">
-                            <Text>Retour</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={handleSubmit} className="bg-purple-500 p-3 rounded-xl">
-                            <Text className="text-white">Créer un compte</Text>
-                        </TouchableOpacity>
+                    <View style={styles.row}>
+                        <TouchableOpacity onPress={() => setStep(2)}><Text style={styles.link}>Retour</Text></TouchableOpacity>
+                        <TouchableOpacity onPress={handleSubmit}><Text style={styles.link}>Créer un compte</Text></TouchableOpacity>
                     </View>
                 </>
             )}
         </ScrollView>
     );
-};
+}
 
+const styles = StyleSheet.create({
+    container: {
+        padding: 20,
+        paddingTop: 60,
+        backgroundColor: '#f2f2f2',
+        flexGrow: 1
+    },
+    title: {
+        fontSize: 26,
+        fontWeight: 'bold',
+        marginBottom: 20,
+        textAlign: 'center'
+    },
+    subtitle: {
+        fontSize: 18,
+        marginBottom: 10,
+        textAlign: 'center'
+    },
+    input: {
+        backgroundColor: '#fff',
+        padding: 12,
+        borderRadius: 8,
+        marginBottom: 12,
+        borderColor: '#ccc',
+        borderWidth: 1
+    },
+    btn: {
+        backgroundColor: '#ddd',
+        padding: 12,
+        borderRadius: 25,
+        marginBottom: 10,
+        alignItems: 'center'
+    },
+    activeBtn: {
+        backgroundColor: '#a78bfa',
+        padding: 12,
+        borderRadius: 25,
+        marginBottom: 10,
+        alignItems: 'center'
+    },
+    btnText: {
+        color: '#000'
+    },
+    nextBtn: {
+        backgroundColor: '#6d28d9',
+        padding: 12,
+        borderRadius: 25,
+        marginTop: 20,
+        alignItems: 'center'
+    },
+    nextBtnText: {
+        color: '#fff',
+        fontWeight: 'bold'
+    },
+    row: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: 20
+    },
+    link: {
+        color: '#6d28d9',
+        fontWeight: 'bold',
+        fontSize: 16
+    }
+});
 export default Register;
