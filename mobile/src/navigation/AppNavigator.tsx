@@ -1,31 +1,42 @@
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MapScreen from '../screens/MapScreen';
-import EventDetailsScreen from '../screens/EventDetailsScreen';
-import BandDetailsScreen from '../screens/BandDetailsScreen';
 import ListBandScreen from '../screens/ListBandScreen';
+import { View, Text } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
-export type RootStackParamList = {
-    Login: undefined;
-    Register: undefined;
-    Map: undefined;
-    EventDetails: { id: number };
-    ListBand: undefined;
-    BandDetails: { id: number };
-    Profile: undefined;
-};
+function ProfileScreen() {
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Text>Profil</Text>
+    </View>
+  );
+}
 
-const Stack = createNativeStackNavigator<RootStackParamList>();
+const Tab = createBottomTabNavigator();
 
 export default function AppNavigator() {
-    return (
-        <Stack.Navigator initialRouteName="Map">
-        <Stack.Screen name="Map" component={MapScreen} />
-        <Stack.Screen name="EventDetails" component={EventDetailsScreen} />
-        <Stack.Screen name="BandDetails" component={BandDetailsScreen} />
-        <Stack.Screen name="ListBand" component={ListBandScreen} />
-        {/* <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="Register" component={RegisterScreen} />
-        <Stack.Screen name="Profile" component={ProfileScreen} /> */}
-        </Stack.Navigator>
-    );
+  return (
+    <Tab.Navigator
+      initialRouteName="Map"
+      screenOptions={({ route }) => ({
+        tabBarActiveTintColor: '#7c3aed',
+        tabBarInactiveTintColor: '#888',
+        tabBarStyle: { backgroundColor: '#fff', borderTopWidth: 0, height: 80, position: 'absolute' },
+        tabBarIcon: ({ color, size }) => {
+          if (route.name === 'Map') {
+            return <Ionicons name="map" size={size} color={color} />;
+          } else if (route.name === 'ListBand') {
+            return <Ionicons name="musical-notes" size={size} color={color} />;
+          } else if (route.name === 'Profile') {
+            return <Ionicons name="person" size={size} color={color} />;
+          }
+        },
+        tabBarLabelStyle: { fontSize: 13, marginBottom: 6 },
+      })}
+    >
+      <Tab.Screen name="Map" component={MapScreen} options={{ tabBarLabel: 'Carte' }} />
+      <Tab.Screen name="ListBand" component={ListBandScreen} options={{ tabBarLabel: 'Groupes' }} />
+      <Tab.Screen name="Profile" component={ProfileScreen} options={{ tabBarLabel: 'Profil' }} />
+    </Tab.Navigator>
+  );
 }
