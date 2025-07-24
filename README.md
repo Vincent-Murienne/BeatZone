@@ -44,7 +44,29 @@ Le déploiement est effectué sur Render, qui prend en charge les conteneurs Doc
 
 L’authentification est gérée par Supabase Auth, qui propose une solution complète basée sur JWT, avec prise en charge de l’email, des magic links et des fournisseurs OAuth. L’intégration est native avec la base de données et permet de gérer les rôles et permissions.
 
-## Paiement
 
-Stripe est intégré pour le paiement sécurisé des événements payants. Il prend en charge de nombreux moyens de paiement et offre une API claire ainsi qu’un dashboard complet. La solution est conforme aux normes de sécurité en vigueur.
+## Mise en place du projet
+
+Faire un npm i dans le dossier frontend et le dossier backend.
+
+ajouter un fichier .env.development dans le dossier backend de la forme : 
+PORT="mettre votre port"
+SUPABASE_URL="lien vers votre base supabase"
+SUPABASE_KEY="votre cle pour ce connecter a supabase"
+
+ajouter un fichier .env.development dans le dossier frontend de la forme : 
+VITE_URL_API="adresse_de_votre_site/api"
+VITE_MAPBOX_TOKEN="token pour utiliser mapbox"
+VITE_SUPABASE_URL="lien vers votre base supabase"
+VITE_SUPABASE_KEY="votre cle pour ce connecter a supabase"
+
+ajouter un fichier .env.development dans le dossier mobile de la forme : 
+EXPO_PUBLIC_URL_API="adresse_de_votre_site/api"  (dois avoir la meme adresse que votre back)
+EXPO_SUPABASE_URL="lien vers votre base supabase"
+EXPO_SUPABASE_KEY="votre cle pour ce connecter a supabase"
+
+Ce mettre dans le dossier BeatZone et faire la commande :docker compose-up --build -d
+Cela va lancer le projet. Pour le fermer faire la commande :docker-compose down 
+
+
 
