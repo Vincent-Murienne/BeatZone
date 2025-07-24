@@ -13,6 +13,7 @@ import ArtistRoute from '../auth/guards/ArtistRoute'
 import ProfilePage from '../pages/ProfilePage'
 import AuthCallback from '../auth/callback'
 import MainNavbar from '../components/Navbar/MainNavbar'
+import EventsPage from '../pages/EventPage'
 
 function AppRouter() {
     return (
@@ -37,6 +38,14 @@ function AppRouter() {
                         <>
                             <MainNavbar />
                             <MapPage />
+                        </>
+                    </ProtectedRoute>
+                } />
+                <Route path="/events" element={
+                    <ProtectedRoute>
+                        <>
+                            <MainNavbar />
+                            <EventsPage />
                         </>
                     </ProtectedRoute>
                 } />

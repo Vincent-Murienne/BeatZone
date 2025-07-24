@@ -1,6 +1,8 @@
 import type { Band } from "./band";
 import type { Owner } from "./owner";
 
+export type EventStatus = 'upcoming' | 'current' | 'past';
+
 export interface Event {
   id_event: number;
   titre: string;

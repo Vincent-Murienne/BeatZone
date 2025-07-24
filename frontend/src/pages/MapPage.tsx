@@ -32,7 +32,7 @@ export default function MapPage() {
     useEffect(() => {
         const fetchEvents = async () => {
         try {
-            const res = await fetch(`${API_URL}/events`);
+            const res = await fetch(`${API_URL}/eventsDate`);
             const data = await res.json();
             setEvents(data);
         } catch (error) {

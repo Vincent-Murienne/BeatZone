@@ -1,15 +1,19 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import type { Event } from "../types/event";
 import {
-    fetchAllEvents,
     fetchEventById,
     fetchUniqueGenres,
     fetchUniqueSuggestions,
+    fetchEventsByStatus,
+    fetchEventsByArtist,
+    fetchEventsByOwner,
+    fetchNowFuturEvents
 } from "../models/eventModel";
+import { EventStatus } from "../types/event";
 
-// GET /events
-export const getAllEvents = async (_req: FastifyRequest, reply: FastifyReply) => {
-    const { data, error } = await fetchAllEvents();
+// GET /eventsDate
+export const getNowFuturEvents = async (_req: FastifyRequest, reply: FastifyReply) => {
+    const { data, error } = await fetchNowFuturEvents();
     if (error) return reply.status(500).send({ error: error.message });
     if (!data) return reply.send([]);
 
@@ -81,4 +85,38 @@ export const getAllSuggestions = async (_req: FastifyRequest, reply: FastifyRepl
         });
 
     return reply.send(suggestions);
+};
+
+export const getEventsByStatus = async (req: FastifyRequest, reply: FastifyReply) => {
+    try {
+        const { status } = req.params as { status: EventStatus };
+        const { data, error } = await fetchEventsByStatus(status);
+        
+        if (error) return reply.status(500).send({ error: error.message });
+        if (!data) return reply.send([]);
+        
+        return reply.send(data);
+    } catch (error: any) {
+        console.error('Error in getEventsByStatus:', error);
+        return reply.status(500).send({ error: error.message });
+    }
+};
+export const getEventsByArtist = async (req: FastifyRequest, reply: FastifyReply) => {
+    const { id_band, status } = req.params as { id_band: string, status: EventStatus };
+    const { data, error } = await fetchEventsByArtist(id_band, status);
+    
+    if (error) return reply.status(500).send({ error: error.message });
+    if (!data) return reply.send([]);
+    
+    return reply.send(data);
+};
+
+export const getEventsByOwner = async (req: FastifyRequest, reply: FastifyReply) => {
+    const { id_owner, status } = req.params as { id_owner: string, status: EventStatus };
+    const { data, error } = await fetchEventsByOwner(id_owner, status);
+    
+    if (error) return reply.status(500).send({ error: error.message });
+    if (!data) return reply.send([]);
+    
+    return reply.send(data);
 };
