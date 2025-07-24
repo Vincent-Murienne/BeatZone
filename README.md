@@ -107,15 +107,7 @@ L’authentification est assurée par **Supabase Auth**, basé sur **JWT**, avec
 
 ## Mise en place du projet
 
-### 1. Installation des dépendances
-
-```bash
-npm install
-```
-
-À faire dans les dossiers : frontend | backend | mobile
-
-### 2. Configuration des variables d’environnement
+### 1. Configuration des variables d’environnement
 
 Backend (backend/.env.development)
 
@@ -142,7 +134,7 @@ Frontend Mobile (mobile/.env.development)
    EXPO_SUPABASE_KEY="votre_clé_supabase"
 ```
 
-### 3. Lancement du projet avec Docker
+### 2. Lancement du projet avec Docker
 
 Depuis le dossier BeatZone, exécutez :
 
