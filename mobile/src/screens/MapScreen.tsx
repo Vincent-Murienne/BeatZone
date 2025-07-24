@@ -74,14 +74,23 @@ export default function MapScreen() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch(`${API_URL}/events`);
+        const res = await fetch(`${API_URL}/eventsDate`);
         const data = await res.json();
-        setEvents(data);
-        // Afficher tous les événements à l'initialisation
-        setFilteredEvents(data);
+
+        if (Array.isArray(data)) {
+          setEvents(data);
+          setFilteredEvents(data);
+        } else {
+          console.warn("Données invalides pour /events : attendu un tableau", data);
+          setEvents([]); 
+          setFilteredEvents([]);
+        }
       } catch (e) {
-        console.warn(e);
+        console.warn("Erreur fetch /events :", e);
+        setEvents([]);
+        setFilteredEvents([]);
       }
+
       try {
         const resGenres = await fetch(`${API_URL}/events/genres`);
         const dataGenres = await resGenres.json();
@@ -94,6 +103,7 @@ export default function MapScreen() {
   }, []);
 
   function filterEvents() {
+    if (!Array.isArray(events)) return;
     const now = new Date();
     const filtered = events.filter((event) => {
       const debut = new Date(event.debut);
