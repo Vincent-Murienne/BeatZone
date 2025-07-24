@@ -15,6 +15,8 @@ import EventModal from "../components/EventModal";
 import type { Event } from "../types/event";
 import type { Region } from "react-native-maps";
 import { useNavigationState } from "@react-navigation/native";
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback } from 'react';
 
 import SearchBarEvent from "../components/filtres/SearchBarEvent";
 import StatusEvenementFilter from "../components/filtres/StatusEvenementFilter";
@@ -48,6 +50,14 @@ export default function MapScreen() {
     const route = state.routes[state.index];
     return route.name;
   });
+
+    useFocusEffect(
+    useCallback(() => {
+      return () => {
+        setSelectedEvent(null);
+      };
+    }, [])
+  );
 
   useEffect(() => {
     if (currentRoute === 'EventDetails') {
