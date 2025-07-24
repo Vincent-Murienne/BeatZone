@@ -100,16 +100,7 @@ export default function EventsPage() {
                         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
                     </div>
                 ) : events.length > 0 ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {events.map((event) => (
-                            <EventCard 
-                                key={event.id_event} 
-                                event={event} 
-                                showActions={true}
-                                showViewMoreButton={true}
-                            />
-                        ))}
-                    </div>
+                    <EventCard events={events} />
                 ) : (
                     <div className="text-center py-12 bg-white rounded-lg shadow">
                         <p className="text-gray-500 text-lg">

@@ -467,7 +467,7 @@ function ProfilePage() {
                                                 onClick={() => navigate(`/event/${event.id_event}`)}
                                             >
                                                 <p className="font-semibold">{event.titre}</p>
-                                                <p className="text-sm text-gray-600">{event.lieu} — {event.debut}</p>
+                                                <p className="text-sm text-gray-600">{event.lieu} — {new Date(event.debut).toLocaleString('fr-FR')}</p>
                                             </li>
                                         ))}
                                     </ul>
