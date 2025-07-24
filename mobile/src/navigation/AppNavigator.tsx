@@ -1,27 +1,27 @@
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import MapScreen from '../screens/MapScreen';
+import ListBandScreen from '../screens/ListBandScreen';
 import EventDetailsScreen from '../screens/EventDetailsScreen';
 import BandDetailsScreen from '../screens/BandDetailsScreen';
-import ListBandScreen from '../screens/ListBandScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import ProfileScreen from '../screens/ProfileScreen';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import BottomTabNavigator from '../components/BottomTabNavigator';
 
-export type RootStackParamList = {
-    Login: undefined;
-    Register: undefined;
-    Map: undefined;
-    EventDetails: { id: number };
-    ListBand: undefined;
-    BandDetails: { id: number };
-    Profile: undefined;
-};
+// export type RootStackParamList = {
+//     Login: undefined;
+//     Register: undefined;
+//     Map: undefined;
+//     EventDetails: { id: number };
+//     ListBand: undefined;
+//     BandDetails: { id: number };
+//     Profile: undefined;
+// };
 
-const Stack = createNativeStackNavigator<RootStackParamList>();
+const Stack = createNativeStackNavigator();
 
 export default function AppNavigator() {
     return (
-        <Stack.Navigator initialRouteName="Map">
-            <Stack.Screen name="Map" component={MapScreen} />
+        <Stack.Navigator initialRouteName="Main">
+            <Stack.Screen name="Main" component={BottomTabNavigator} options={{ headerShown: false }} />
             <Stack.Screen name="EventDetails" component={EventDetailsScreen} />
             <Stack.Screen name="BandDetails" component={BandDetailsScreen} />
             <Stack.Screen name="ListBand" component={ListBandScreen} />
