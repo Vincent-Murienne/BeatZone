@@ -3,6 +3,8 @@ import MapScreen from '../screens/MapScreen';
 import EventDetailsScreen from '../screens/EventDetailsScreen';
 import BandDetailsScreen from '../screens/BandDetailsScreen';
 import ListBandScreen from '../screens/ListBandScreen';
+import RegisterScreen from '../screens/RegisterScreen';
+import ProfileScreen from '../screens/ProfileScreen';
 
 export type RootStackParamList = {
     Login: undefined;
@@ -23,9 +25,9 @@ export default function AppNavigator() {
         <Stack.Screen name="EventDetails" component={EventDetailsScreen} />
         <Stack.Screen name="BandDetails" component={BandDetailsScreen} />
         <Stack.Screen name="ListBand" component={ListBandScreen} />
-        {/* <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Register" component={RegisterScreen} />
-        <Stack.Screen name="Profile" component={ProfileScreen} /> */}
+        <Stack.Screen name="Profile" component={ProfileScreen} />
+        <Stack.Screen name="Map" component={MapScreen} />
         </Stack.Navigator>
     );
 }
