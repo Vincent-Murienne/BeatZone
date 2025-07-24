@@ -6,20 +6,6 @@ Les utilisateurs peuvent également ajouter des artistes ou des événements à 
 
 ---
 
-## Sommaire
-
-- [Fonctionnalités](#fonctionnalités)
-- [Frontend Web](#frontend-web)
-- [Frontend Mobile](#frontend-mobile)
-- [Backend API](#backend-api)
-- [Base de données](#base-de-données)
-- [Conteneurisation](#conteneurisation)
-- [Carte interactive](#carte-interactive)
-- [Authentification](#authentification)
-- [Mise en place du projet](#mise-en-place-du-projet)
-
----
-
 ## Fonctionnalités
 
 BeatZone offre une expérience personnalisée selon le rôle des utilisateurs :
