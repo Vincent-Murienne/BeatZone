@@ -68,5 +68,9 @@ EXPO_SUPABASE_KEY="votre cle pour ce connecter a supabase"
 Ce mettre dans le dossier BeatZone et faire la commande :docker compose-up --build -d
 Cela va lancer le projet. Pour le fermer faire la commande :docker-compose down 
 
+Pour la partie mobile vous devez installer l'application expo GO sur votre téléphone.
+Faire la commande npm i dans le dossier mobile.
+Ensuite faire la commande npx expo start. Un QR va s'afficher, le scanner avec votre téléphone. Cela va ouvrir une page web qui ensuite vous redirigera vers l'aplication expo.
+
 
 
