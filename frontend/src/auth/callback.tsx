@@ -35,7 +35,7 @@ export default function AuthCallback() {
                     };
 
                     saveUserToStorage(formattedUser);
-                    navigate("/");
+                    navigate("/map");
                 } else {
                     throw new Error("Utilisateur non trouvé");
                 }

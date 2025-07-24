@@ -1,50 +1,147 @@
 # BeatZone
 
-BeatZone est une application web et mobile dédiée aux événements musicaux. Elle permet aux utilisateurs de découvrir les concerts et festivals autour d’eux, aux organisateurs de créer et gérer des événements, et aux artistes d’indiquer où ils jouent. Les utilisateurs peuvent également ajouter des artistes ou des événements à leurs favoris pour ne rien manquer de leur actualité.
+**BeatZone** est une application web et mobile dédiée aux événements musicaux.  
+Elle permet aux utilisateurs de découvrir les concerts et festivals à proximité, aux organisateurs de créer et gérer leurs événements, et aux artistes d’indiquer leurs dates de représentation.  
+Les utilisateurs peuvent également ajouter des artistes ou des événements à leurs favoris pour rester informés de leur actualité.
 
-## Fonctionnalités principales
+---
 
-L’application propose une expérience différenciée selon le rôle des utilisateurs. Les visiteurs peuvent explorer les événements géolocalisés, les ajouter à leurs favoris, et consulter les artistes programmés. Les organisateurs ont la possibilité de créer et modifier leurs événements, d’en gérer les détails et d’assurer leur visibilité. Les artistes peuvent indiquer leur participation à un événement, enrichir leur profil et interagir avec les organisateurs.
+## Fonctionnalités
+
+BeatZone offre une expérience personnalisée selon le rôle des utilisateurs :
+
+- **Visiteurs** : exploration des événements géolocalisés, ajout aux favoris, consultation des artistes programmés.
+- **Organisateurs** : création, modification et gestion d’événements, contrôle de la visibilité.
+- **Artistes** : association à des événements, enrichissement de leur profil, communication avec les organisateurs.
+
+---
 
 ## Frontend Web
 
-Le frontend web est développé avec React, la bibliothèque la plus utilisée pour construire des interfaces dynamiques. Grâce à sa structure en composants réutilisables et à son écosystème mature, elle permet un développement rapide et maintenable. Le bundler Vite est utilisé pour optimiser le temps de démarrage du serveur de développement.
+Le frontend web est développé avec **React**, accompagné des technologies suivantes :
 
-Le typage est assuré par TypeScript, qui offre une meilleure lisibilité du code et limite les erreurs. Le design est géré avec Tailwind CSS, une solution utilitaire permettant un styling rapide et cohérent. Pour la gestion des appels API, TanStack Query est utilisé. La navigation entre les pages repose sur React Router. Le paiement en ligne est pris en charge via Stripe, assurant un traitement sécurisé.
+- **TypeScript** : typage statique pour une meilleure robustesse du code.
+- **Vite** : bundler rapide pour un démarrage fluide du serveur de développement.
+- **Tailwind CSS** : framework utilitaire pour un design rapide et cohérent.
+- **TanStack Query** : gestion performante des appels API.
+- **React Router** : navigation fluide entre les pages.
+- **Stripe** : gestion des paiements en ligne de manière sécurisée.
+
+---
 
 ## Frontend Mobile
 
-Le frontend mobile est construit avec React Native, qui permet de partager la logique et une partie des composants avec le frontend web tout en produisant des applications natives pour iOS et Android. Expo facilite le développement mobile et le déploiement sans configuration complexe.
+L’application mobile est développée avec **React Native**, permettant le partage de logique avec le frontend web tout en générant des applications **natives iOS et Android**.
+
+- **Expo** est utilisé pour simplifier le développement, les tests et le déploiement.
+
+---
 
 ## Backend API
 
-Le backend repose sur Node.js avec Fastify, un framework plus rapide et typé qu’Express, particulièrement bien adapté à TypeScript. Il permet de gérer les routes de l’API, l’authentification, les paiements, la communication avec la base de données et la logique métier.
+Le backend est construit avec **Node.js** et **Fastify**, un framework rapide et typé, bien adapté à TypeScript.
+
+Il permet de gérer :
+- les routes de l’API
+- l’authentification
+- les paiements
+- les accès aux données
+- la logique métier
+
+---
 
 ## Base de données
 
-Le backend utilise PostgreSQL comme système de gestion de base de données, via Supabase. Supabase offre une interface d’administration intuitive, un hébergement managé, et intègre nativement des fonctionnalités comme l’authentification, le stockage de fichiers et les règles de sécurité. PostgreSQL permet de gérer des relations complexes et des types de données variés comme les coordonnées géographiques.
+La base de données est gérée avec **PostgreSQL**, via **Supabase**, qui fournit :
+
+- Une interface d’administration conviviale
+- Un hébergement managé
+- Des fonctionnalités intégrées : authentification, stockage de fichiers, règles de sécurité
+- Le support des données géographiques pour la localisation des événements
+
+---
 
 ## Conteneurisation
 
-Docker est utilisé pour garantir un environnement de développement et de production identique sur toutes les machines. Il simplifie l'hébergement, la maintenance et le déploiement, notamment en environnement cloud.
+**Docker** est utilisé pour garantir un environnement identique en développement et production :
 
-## CI/CD
+- Déploiement simplifié
+- Maintenance facilitée
+- Hébergement cloud optimisé
 
-GitHub Actions est utilisé pour automatiser les workflows de test, build et déploiement. Cela garantit un cycle de livraison rapide et fiable, sans outil externe.
+---
 
 ## Carte interactive
 
-BeatZone utilise Mapbox pour l’affichage des cartes et la géolocalisation des événements. Cette solution permet une personnalisation poussée de l’interface et prend en charge l’affichage en temps réel des positions.
+L'application intègre **Mapbox** pour l’affichage des événements sur une carte interactive :
 
-## Hébergement
+- Géolocalisation en temps réel
+- Interface hautement personnalisable
 
-Le déploiement est effectué sur Render, qui prend en charge les conteneurs Docker, propose une base PostgreSQL managée, une intégration GitHub native, un certificat SSL automatique et un monitoring intégré.
+---
 
 ## Authentification
 
-L’authentification est gérée par Supabase Auth, qui propose une solution complète basée sur JWT, avec prise en charge de l’email, des magic links et des fournisseurs OAuth. L’intégration est native avec la base de données et permet de gérer les rôles et permissions.
+L’authentification est assurée par **Supabase Auth**, basé sur **JWT**, avec support :
 
-## Paiement
+- Email / mot de passe
+- Magic links
+- Fournisseurs OAuth
+- Gestion des rôles et permissions directement intégrée
 
-Stripe est intégré pour le paiement sécurisé des événements payants. Il prend en charge de nombreux moyens de paiement et offre une API claire ainsi qu’un dashboard complet. La solution est conforme aux normes de sécurité en vigueur.
+---
+
+## Mise en place du projet
+
+### 1. Configuration des variables d’environnement
+
+Backend (backend/.env.development)
+
+```bash
+   PORT="votre_port"
+   SUPABASE_URL="https://votre_instance.supabase.co"
+   SUPABASE_KEY="votre_clé_supabase"
+```
+
+Frontend Web (frontend/.env.development)
+
+```bash
+   VITE_URL_API="https://votre_site/api"
+   VITE_MAPBOX_TOKEN="votre_token_mapbox"
+   VITE_SUPABASE_URL="https://votre_instance.supabase.co"
+   VITE_SUPABASE_KEY="votre_clé_supabase"
+```
+
+Frontend Mobile (mobile/.env.development)
+
+```bash
+   EXPO_PUBLIC_URL_API="https://votre_site/api"
+   EXPO_SUPABASE_URL="https://votre_instance.supabase.co"
+   EXPO_SUPABASE_KEY="votre_clé_supabase"
+```
+
+### 2. Lancement du projet avec Docker
+
+Depuis le dossier BeatZone, exécutez :
+
+```bash
+docker compose up --build -d
+```
+
+Pour arrêter les services :
+
+```bash
+docker compose down
+```
+### 4. Lancement de l’application mobile
+1) Installer l’application Expo Go sur votre téléphone.
+2) Dans le dossier mobile, exécutez :
+   
+   ```bash
+    npm install
+    npx expo start
+   ```
+   
+4) Scanner le QR Code affiché avec l’application Expo Go pour accéder à l’application sur mobil
+
 

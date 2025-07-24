@@ -29,12 +29,12 @@ export default function ProfileScreen() {
 
     useEffect(() => {
         const init = async () => {
-            const raw = await AsyncStorage.getItem('beatzone_user');
-            if (!raw) return;
-            const userParsed = JSON.parse(raw);
-            const id = userParsed.id;
+            // const raw = await AsyncStorage.getItem('beatzone_user');
+            // if (!raw) return;
+            // const userParsed = JSON.parse(raw);
+            // const id = userParsed.id;
 
-            // const id = "4a04abf4-ae3d-45bb-8b9c-ed76b23e86ed";
+            const id = "4a04abf4-ae3d-45bb-8b9c-ed76b23e86ed";
 
             fetchUserInfo(id);
             fetchUserBand(id);
