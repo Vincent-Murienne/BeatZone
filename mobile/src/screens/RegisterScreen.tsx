@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert, ScrollView } from 'react-native';
 
+const API_URL = process.env.EXPO_PUBLIC_API_URL;
+
 const Register = () => {
     const [userType, setUserType] = useState<'artist' | 'user' | 'owner' | null>(null);
     const [step, setStep] = useState(1);
@@ -69,7 +71,7 @@ const Register = () => {
         console.log('Payload:', payload);
 
         try {
-            const res = await fetch('http://10.151.17.254:3000/api/register', {
+            const res = await fetch(`${API_URL}/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload),
