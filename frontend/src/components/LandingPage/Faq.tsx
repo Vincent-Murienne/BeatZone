@@ -23,7 +23,7 @@ const FaqSection = () => {
 	};
 
 	return (
-		<section className="w-full py-16 bg-white px-4">
+		<section id="faq" className="w-full py-16 bg-white px-4">
 			<h2 className="text-3xl font-bold text-center mb-8">
 				Foire aux Questions
 			</h2>

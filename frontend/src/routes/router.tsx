@@ -14,6 +14,7 @@ import ProfilePage from '../pages/ProfilePage'
 import AuthCallback from '../auth/callback'
 import MainNavbar from '../components/Navbar/MainNavbar'
 import EventsPage from '../pages/EventPage'
+import CGU from '../components/LandingPage/CGU'
 
 function AppRouter() {
     return (
@@ -30,9 +31,8 @@ function AppRouter() {
                     </PublicRoute>
                 } />
                 <Route path="/auth/callback" element={<AuthCallback />} />
-                <Route path="/" element={
-                    <LandingPage />
-                } />
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/cgu" element={<CGU />} />
                 <Route path="/map" element={
                     <ProtectedRoute>
                         <>
@@ -89,8 +89,6 @@ function AppRouter() {
                         </>
                     </ProtectedRoute>
                 } />
-
-                {/* Add more routes as needed */}
             </Routes>
         </BrowserRouter>
     )

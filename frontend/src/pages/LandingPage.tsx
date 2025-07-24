@@ -1,4 +1,5 @@
 // import { Link } from "react-router-dom";
+import Contact from "../components/LandingPage/Contact";
 import FaqSection from "../components/LandingPage/Faq";
 import Footer from "../components/LandingPage/Footer";
 import HeroBanner from "../components/LandingPage/HeroBanner";
@@ -13,6 +14,7 @@ export default function LandingPage() {
 			<HeroBanner />
 			<Presentation />
 			<MobileApp />
+			<Contact />
 			<FaqSection />
 			<Footer />
 		</main>

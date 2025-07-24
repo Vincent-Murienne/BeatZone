@@ -1,3 +1,5 @@
+import map from "../../../public/map.png";
+
 const MobileApp = () => {
   return (
     <section className="w-full bg-gradient-to-r from-pink-400 to-red-400 text-white text-center px-4 py-20">
@@ -9,9 +11,9 @@ const MobileApp = () => {
 
       {/* Mockup iPhone simplifié */}
       <div className="w-48 h-96 mx-auto bg-white rounded-3xl shadow-lg p-2 flex items-center justify-center">
-        <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+        <div className="w-full h-full  flex items-center justify-center rounded-3xl overflow-hidden">
           {/* Ici tu peux mettre un placeholder de carte ou une vraie map plus tard */}
-          <img src="/map-placeholder.png" alt="Carte" className="w-4/5 h-4/5 object-contain" />
+          <img src={map} alt="Carte" className="object-cover w-full h-full" />
         </div>
       </div>
 
