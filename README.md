@@ -28,17 +28,10 @@ Le backend utilise PostgreSQL comme système de gestion de base de données, via
 
 Docker est utilisé pour garantir un environnement de développement et de production identique sur toutes les machines. Il simplifie l'hébergement, la maintenance et le déploiement, notamment en environnement cloud.
 
-## CI/CD
-
-GitHub Actions est utilisé pour automatiser les workflows de test, build et déploiement. Cela garantit un cycle de livraison rapide et fiable, sans outil externe.
-
 ## Carte interactive
 
 BeatZone utilise Mapbox pour l’affichage des cartes et la géolocalisation des événements. Cette solution permet une personnalisation poussée de l’interface et prend en charge l’affichage en temps réel des positions.
 
-## Hébergement
-
-Le déploiement est effectué sur Render, qui prend en charge les conteneurs Docker, propose une base PostgreSQL managée, une intégration GitHub native, un certificat SSL automatique et un monitoring intégré.
 
 ## Authentification
 
