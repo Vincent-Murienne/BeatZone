@@ -1,9 +1,10 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { fetchOwnerByIdUser, updateOwner } from "../models/ownerModel";
+import { log } from "console";
 
 export const getOwnerByUserId = async (req: FastifyRequest, reply: FastifyReply) => {
     const { userId } = req.params as { userId: string };
-    console.log(`Received request for owner info with user ID: ${userId}`);
+    console.log(`ID: ${userId}`);
 
     try {
         const data = await fetchOwnerByIdUser(userId);

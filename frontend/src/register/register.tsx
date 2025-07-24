@@ -206,7 +206,7 @@ function Register() {
                                         <>
                                             <input
                                                 type="text"
-                                                placeholder="Nom du groupe"
+                                                placeholder="Nom du membre"
                                                 value={artistMemberName}
                                                 onChange={(e) => setArtistMemberName(e.target.value)}
                                                 className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
@@ -317,14 +317,28 @@ function Register() {
                                         >
                                             Retour
                                         </button>
-                                        <button
-                                            type="button"
-                                            onClick={() => setStep(3)}
-                                            disabled={!userType}
-                                            className="py-3 px-6 bg-gradient-to-r from-purple-500 to-blue-500 text-white font-semibold rounded-xl hover:from-purple-600 hover:to-blue-600 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all"
-                                        >
-                                            Suivant
-                                        </button>
+
+                                        {userType === 'user' ? (
+                                            <button
+                                                type="submit"
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    handleSubmit();
+                                                }}
+                                                className="py-3 px-6 bg-gradient-to-r from-purple-500 to-blue-500 text-white font-semibold rounded-xl hover:from-purple-600 hover:to-blue-600 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all"
+                                            >
+                                                Créer un compte
+                                            </button>
+                                        ) : (
+                                            <button
+                                                type="button"
+                                                onClick={() => setStep(3)}
+                                                disabled={!userType}
+                                                className="py-3 px-6 bg-gradient-to-r from-purple-500 to-blue-500 text-white font-semibold rounded-xl hover:from-purple-600 hover:to-blue-600 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all"
+                                            >
+                                                Suivant
+                                            </button>
+                                        )}
                                     </div>
                                 </>
                             )}

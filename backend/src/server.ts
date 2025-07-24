@@ -2,12 +2,13 @@ import Fastify, { fastify } from 'fastify'
 import cors from '@fastify/cors'
 import helmet from '@fastify/helmet'
 import registerRoutes from './register'
-import loginRoutes from './login'
+import { loginRoutes, logoutRoutes } from './login'
 import eventRoute from "./routes/eventRoute";
 import bandRoute from "./routes/bandRoute";
 import userRoutes from './routes/usersRoute';
 import favoriteRoutes from './routes/favoriteRoute';
 import favoriteEventRoutes from "./routes/favoriteEventRoute";
+import ownerRoutes from "./routes/ownerRoute";
 
 
 const app = Fastify()
@@ -19,6 +20,7 @@ app.register(cors, {
 
 app.register(registerRoutes)
 app.register(loginRoutes)
+app.register(logoutRoutes)
 
 app.register(helmet)
 const PORT = Number(process.env.PORT)
@@ -43,5 +45,6 @@ app.register(bandRoute, { prefix: "/api" });
 app.register(userRoutes, { prefix: "/api" });
 app.register(favoriteRoutes, { prefix: "/api" });
 app.register(favoriteEventRoutes, { prefix: "/api" });
+app.register(ownerRoutes, { prefix: "/api" });
 
 export default app;

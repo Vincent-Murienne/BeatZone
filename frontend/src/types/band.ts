@@ -9,8 +9,8 @@ export interface Band {
     image_url: string;
     cree_le: string;
     id_user: string;
-    band_socials?: BandSocials | null;
-    membres?: Member[] | null;
+    band_socials?: BandSocials[] | null;
+    member?: Member[] | null;
     avoir?: {
         genre: Genre;
         date_ajout: string | null;

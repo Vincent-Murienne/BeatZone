@@ -16,7 +16,7 @@ function ProfilePage() {
     const [eventFavorites, setEventFavorites] = useState<any[]>([]);
     const navigate = useNavigate();
 
-    const [activeTab, setActiveTab] = useState<'personal' | 'artist' | 'owner' | 'favorites'>('personal');
+    const [activeTab, setActiveTab] = useState<'personal' | 'artist' | 'owner' | 'favorites' | 'eventFavorites'>('personal');
 
     const fetchUserInfo = async (userId: any) => {
         const response = await fetch(`${API_URL}/user/${userId}`, {
@@ -65,13 +65,15 @@ function ProfilePage() {
 
 
     const fetchOwner = async (userId: string) => {
+        console.log("ID reçu dans =", userId);
         const response = await fetch(`${API_URL}/owner/${userId}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
             }
         });
-
+        console.log(response);
+        
         try {
             if (!response.ok) {
                 throw new Error('Failed to fetch owner info');
@@ -149,14 +151,14 @@ function ProfilePage() {
     const fetchFavorites = async (userId: string) => {
         try {
             const response = await fetch(`${API_URL}/favorites/${userId}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            }
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
             });
 
             if (!response.ok) {
-            throw new Error('Erreur lors de la récupération des favoris');
+                throw new Error('Erreur lors de la récupération des favoris');
             }
 
             const data = await response.json();
@@ -164,24 +166,24 @@ function ProfilePage() {
         } catch (error) {
             console.error('Erreur fetchFavorites :', error);
         }
-        };
-        const fetchEventFavorites = async (userId: string) => {
-    try {
-        const response = await fetch(`${API_URL}/favorites-event/${userId}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
+    };
+    const fetchEventFavorites = async (userId: string) => {
+        try {
+            const response = await fetch(`${API_URL}/favorites-event/${userId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+            if (!response.ok) {
+                throw new Error('Erreur lors de la récupération des événements favoris');
             }
-        });
-        if (!response.ok) {
-            throw new Error('Erreur lors de la récupération des événements favoris');
+            const data = await response.json();
+            setEventFavorites(data);
+        } catch (error) {
+            console.error('Erreur fetchEventFavorites :', error);
         }
-        const data = await response.json();
-        setEventFavorites(data);
-    } catch (error) {
-        console.error('Erreur fetchEventFavorites :', error);
-    }
-};
+    };
     useEffect(() => {
         const userId: any = localStorage.getItem('beatzone_user');
 
@@ -275,11 +277,11 @@ function ProfilePage() {
                             )}
                             {/* Onglet Favoris (visible pour tous les rôles) */}
                             <button
-                            onClick={() => setActiveTab('favorites')}
-                            className={`px-4 py-2 rounded-t-lg font-medium ${activeTab === 'favorites' ? 'bg-white text-blue-600 border-b-2 border-blue-600' : 'text-gray-500'
-                                }`}
+                                onClick={() => setActiveTab('favorites')}
+                                className={`px-4 py-2 rounded-t-lg font-medium ${activeTab === 'favorites' ? 'bg-white text-blue-600 border-b-2 border-blue-600' : 'text-gray-500'
+                                    }`}
                             >
-                             Groupe Favoris
+                                Groupe Favoris
                             </button>
                             <button
                                 onClick={() => setActiveTab('eventFavorites')}
@@ -425,29 +427,29 @@ function ProfilePage() {
                                 </div>
                             )}
                         </form>
-                    {/* Favoris */}
+                        {/* Favoris */}
                         {activeTab === 'favorites' && (
-                        <div className="space-y-4">
-                            <h2 className="text-2xl font-semibold text-gray-800 border-b-2 border-pink-200 pb-2">
-                            Mes favoris 💖
-                            </h2>
-                            {(favorites?.length ?? 0) === 0 ? (
-                            <p className="text-gray-600">Aucun favori pour l’instant.</p>
-                            ) : (
-                            <ul className="space-y-2">
-                                {favorites.map((band) => (
-                                <li
-                                key={band.id_band}
-                                className="bg-gray-100 p-4 rounded-lg shadow-sm cursor-pointer hover:bg-gray-200"
-                                onClick={() => navigate(`/band/${band.id_band}`)} 
-                                >
-                                <p className="font-semibold">{band.nom}</p>
-                                <p className="text-sm text-gray-600">{band.avoir?.map(a => a.genre.type_musique).join(', ')}</p>
-                                </li>
-                                ))}
-                            </ul>
-                            )}
-                        </div>
+                            <div className="space-y-4">
+                                <h2 className="text-2xl font-semibold text-gray-800 border-b-2 border-pink-200 pb-2">
+                                    Mes favoris 💖
+                                </h2>
+                                {(favorites?.length ?? 0) === 0 ? (
+                                    <p className="text-gray-600">Aucun favori pour l’instant.</p>
+                                ) : (
+                                    <ul className="space-y-2">
+                                        {favorites.map((band) => (
+                                            <li
+                                                key={band.id_band}
+                                                className="bg-gray-100 p-4 rounded-lg shadow-sm cursor-pointer hover:bg-gray-200"
+                                                onClick={() => navigate(`/band/${band.id_band}`)}
+                                            >
+                                                <p className="font-semibold">{band.nom}</p>
+                                                <p className="text-sm text-gray-600">{band.avoir?.map(a => a.genre.type_musique).join(', ')}</p>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
+                            </div>
                         )}
                         {activeTab === 'eventFavorites' && (
                             <div className="space-y-4">

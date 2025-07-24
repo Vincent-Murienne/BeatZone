@@ -125,7 +125,7 @@ export default function BandDetailsPage() {
 
     if (loadingEvents) return <p>Chargement des événements...</p>;
 
-    const socialLinks = band.band_socials;
+    const socialLinks = band.band_socials?.[0];
 
     return (
         <div className="max-w-4xl mx-auto px-4 py-8">
@@ -194,20 +194,20 @@ export default function BandDetailsPage() {
         </div>
 
         {/* Membres */}
-        {band.membres && band.membres.length > 0 && (
+        {band.member && band.member.length > 0 && (
             <div className="mb-8">
             <h2 className="text-lg font-semibold mb-2">Membres du groupe :</h2>
             <ul className="space-y-4">
-                {band.membres.map((membre) => (
+                {band.member.map((member) => (
                 <li
-                    key={membre.id_member}
+                    key={member.id_member}
                     className="p-4 border rounded-lg shadow-sm bg-white"
                 >
                     <div className="flex items-start gap-4">
-                    {membre.image_url ? (
+                    {member.image_url ? (
                         <img
-                        src={membre.image_url}
-                        alt={`${membre.prenom} ${membre.nom}`}
+                        src={member.image_url}
+                        alt={`${member.prenom} ${member.nom}`}
                         className="w-16 h-16 rounded-full object-cover"
                         />
                     ) : (
@@ -217,11 +217,11 @@ export default function BandDetailsPage() {
                     )}
                     <div>
                         <p className="font-medium text-base">
-                        {membre.prenom} {membre.nom}
+                        {member.prenom} {member.nom}
                         </p>
-                        {membre.detenir?.length ? (
+                        {member.detenir?.length ? (
                         <p className="text-sm text-gray-600">
-                            {membre.detenir
+                            {member.detenir
                             .map((d) => d.role?.instrument)
                             .filter(Boolean)
                             .join(", ")}
@@ -231,7 +231,7 @@ export default function BandDetailsPage() {
                             Aucun instrument renseigné
                         </p>
                         )}
-                        <p className="text-sm mt-1 text-gray-500">{membre.bio}</p>
+                        <p className="text-sm mt-1 text-gray-500">{member.bio}</p>
                     </div>
                     </div>
                 </li>
