@@ -249,15 +249,15 @@ export default function BandDetailsScreen() {
             </View>
 
             {/* Membres */}
-            {band.membres && band.membres.length > 0 && (
+            {band.member && band.member.length > 0 && (
                 <View style={styles.section}>
                     <Text style={styles.sectionTitle}>Membres du groupe :</Text>
-                    {band.membres.map((membre) => (
-                        <View key={membre.id_member} style={styles.memberCard}>
+                    {band.member.map((member) => (
+                        <View key={member.id_member} style={styles.memberCard}>
                             <View style={styles.memberInfo}>
-                                {membre.image_url ? (
+                                {member.image_url ? (
                                     <Image
-                                        source={{ uri: membre.image_url }}
+                                        source={{ uri: member.image_url }}
                                         style={styles.memberImage}
                                     />
                                 ) : (
@@ -267,11 +267,11 @@ export default function BandDetailsScreen() {
                                 )}
                                 <View style={styles.memberDetails}>
                                     <Text style={styles.memberName}>
-                                        {membre.prenom} {membre.nom}
+                                        {member.prenom} {member.nom}
                                     </Text>
-                                    {membre.detenir?.length ? (
+                                    {member.detenir?.length ? (
                                         <Text style={styles.memberRole}>
-                                            {membre.detenir
+                                            {member.detenir
                                                 .map((d) => d.role?.instrument)
                                                 .filter(Boolean)
                                                 .join(", ")}
@@ -281,7 +281,7 @@ export default function BandDetailsScreen() {
                                             Aucun instrument renseigné
                                         </Text>
                                     )}
-                                    <Text style={styles.memberBio}>{membre.bio}</Text>
+                                    <Text style={styles.memberBio}>{member.bio}</Text>
                                 </View>
                             </View>
                         </View>

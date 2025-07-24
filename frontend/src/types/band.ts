@@ -10,7 +10,7 @@ export interface Band {
     cree_le: string;
     id_user: string;
     band_socials?: BandSocials[] | null;
-    membres?: Member[] | null;
+    member?: Member[] | null;
     avoir?: {
         genre: Genre;
         date_ajout: string | null;
