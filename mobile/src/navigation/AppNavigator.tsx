@@ -21,13 +21,12 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 export default function AppNavigator() {
     return (
         <Stack.Navigator initialRouteName="Map">
-        <Stack.Screen name="Map" component={MapScreen} />
-        <Stack.Screen name="EventDetails" component={EventDetailsScreen} />
-        <Stack.Screen name="BandDetails" component={BandDetailsScreen} />
-        <Stack.Screen name="ListBand" component={ListBandScreen} />
-        <Stack.Screen name="Register" component={RegisterScreen} />
-        <Stack.Screen name="Profile" component={ProfileScreen} />
-        <Stack.Screen name="Map" component={MapScreen} />
+            <Stack.Screen name="Map" component={MapScreen} />
+            <Stack.Screen name="EventDetails" component={EventDetailsScreen} />
+            <Stack.Screen name="BandDetails" component={BandDetailsScreen} />
+            <Stack.Screen name="ListBand" component={ListBandScreen} />
+            <Stack.Screen name="Register" component={RegisterScreen} />
+            <Stack.Screen name="Profile" component={ProfileScreen} />
         </Stack.Navigator>
     );
 }
